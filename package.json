@@ -1,0 +1,9 @@
+{
+  "name": "zendash",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "dev": "pnpm -r --parallel run dev"
+  }
+}

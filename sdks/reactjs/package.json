@@ -1,0 +1,32 @@
+{
+  "name": "zendash-reactjs",
+  "version": "0.0.1",
+  "description": "The official SDK for ReactJS From Zendash_",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "test": "vitest run"
+  },
+  "keywords": [],
+  "author": "Zendash",
+  "license": "ISC",
+  "packageManager": "pnpm@10.26.1",
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@types/react": "^19.2.8",
+    "@vitejs/plugin-react": "^5.1.2",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.17",
+    "@testing-library/react": "^16.3.1",
+    "jsdom": "^27.4.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  }
+}
