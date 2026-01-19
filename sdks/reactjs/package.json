@@ -1,7 +1,7 @@
 {
-  "name": "zendash-reactjs",
+  "name": "@zendash/reactjs-sdk",
   "version": "0.0.1",
-  "description": "The official SDK for ReactJS From Zendash_",
+  "description": "The official SDK for ReactJS From Zendash",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
