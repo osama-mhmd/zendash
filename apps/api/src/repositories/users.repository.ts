@@ -1,12 +1,8 @@
-import db from "@/db";
-import { users, type NewUser, type User } from "@/db/schemas/users";
+import db from "@db";
+import { users, type NewUser, type User } from "@db/schemas/users";
+import UserToCreate from "@dto/user/user-to-create.dto";
 import { hash } from "argon2";
 import { eq } from "drizzle-orm";
-
-export type UserToCreate = Omit<
-  NewUser,
-  "hashedPassword" | "id" | "isVerified" | "createdAt"
-> & { password: string };
 
 const Users = {
   async create({ password, ...user }: UserToCreate) {

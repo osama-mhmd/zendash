@@ -1,8 +1,8 @@
 // Auth & Users services are interconnected. For instance, The auth service
 // uses the Users Repoistory, therefore It's here.
 
-import db from "@/db";
-import { sessions, type NewSession, type Session } from "@/db/schemas/sessions";
+import db from "@db";
+import { sessions, type NewSession, type Session } from "@db/schemas/sessions";
 import { eq } from "drizzle-orm";
 
 const Sessions = {

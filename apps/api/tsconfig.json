@@ -23,8 +23,12 @@
     "noFallthroughCasesInSwitch": false,
 
     "paths": {
-      "@app/*": ["./src/*"],
-      "@/*": ["./*"]
+      "@db": ["src/db"],
+      "@db/*": ["src/db/*"],
+      "@modules/*": ["src/modules/*"],
+      "@repos/*": ["src/repositories/*"],
+      "@libs/*": ["src/libs/*"],
+      "@dto/*": ["src/dto/*"]
     }
   }
 }

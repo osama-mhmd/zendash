@@ -1,5 +1,5 @@
-import type { NewSession as Session } from "@/db/schemas/sessions";
-import Sessions from "@app/repositories/sessions.repository";
+import type { NewSession as Session } from "@db/schemas/sessions";
+import Sessions from "@repos/sessions.repository";
 
 interface SessionWithToken extends Session {
   token: string;

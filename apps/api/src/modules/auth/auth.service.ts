@@ -1,12 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import Users, { UserToCreate } from "../repositories/users.repository";
+import Users from "@repos/users.repository";
 import { verify } from "argon2";
-import Session from "@/libs/session";
-
-export interface UserToLogin {
-  email: string;
-  password: string;
-}
+import Session from "@libs/session";
+import UserToLogin from "@dto/user/user-to-login.dto";
+import UserToCreate from "@dto/user/user-to-create.dto";
 
 @Injectable()
 export class AuthService {
