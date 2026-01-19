@@ -23,6 +23,10 @@ const Sessions = {
 
     return user;
   },
+
+  async delete(id: string) {
+    await db.delete(sessions).where(eq(sessions.id, id));
+  },
 };
 
 export default Sessions;

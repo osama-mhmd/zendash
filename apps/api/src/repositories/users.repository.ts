@@ -37,6 +37,15 @@ const Users = {
 
     return user;
   },
+  async getByUsername(username: string) {
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.username, username))
+      .limit(1);
+
+    return user;
+  },
 
   async update(user: Partial<User>) {},
 };
