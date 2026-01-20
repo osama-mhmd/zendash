@@ -1,7 +1,8 @@
 CREATE TABLE "sessions" (
 	"id" text PRIMARY KEY NOT NULL,
-	"secretHash" text NOT NULL,
-	"createdAt" timestamp DEFAULT now() NOT NULL
+	"userId" uuid NOT NULL,
+	"lastVerifiedAt" timestamp NOT NULL,
+	"expiresAt" timestamp NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "users" (
@@ -13,3 +14,5 @@ CREATE TABLE "users" (
 	"isVerified" boolean DEFAULT false,
 	"createdAt" timestamp DEFAULT now() NOT NULL
 );
+--> statement-breakpoint
+ALTER TABLE "sessions" ADD CONSTRAINT "sessions_userId_users_id_fk" FOREIGN KEY ("users") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint

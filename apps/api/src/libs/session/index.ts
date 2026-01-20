@@ -1,81 +1,86 @@
 import type { NewSession as Session } from "@db/schemas/sessions";
+import { User } from "@db/schemas/users";
+import { Users } from "@repos";
 import Sessions from "@repos/sessions.repository";
+import { sign, verify } from "jsonwebtoken";
 import grc from "src/utils/grs";
 
-interface SessionWithToken extends Session {
-  token: string;
-}
+type ValidationResult =
+  | {
+      ok: false;
+      message: string;
+    }
+  | {
+      ok: true;
+      user: User;
+    };
 
-const sessionExpiresInSeconds = 60 * 60 * 24;
-const generateSecureRandomString = () => grc(24);
-
-async function createSession(): Promise<SessionWithToken> {
-  const id = generateSecureRandomString();
-  const secret = generateSecureRandomString();
-  const secretHash = (await hashSecret(secret)).toString();
-
-  const token = id + "." + secret;
-
-  const session: SessionWithToken = {
-    id,
-    secretHash,
-    token,
-  };
-
-  Sessions.create(session);
-
-  return session;
-}
-
-async function validateSessionToken(token: string): Promise<Session | null> {
-  const tokenParts = token.split(".");
-  if (tokenParts.length !== 2) {
-    return null;
-  }
-  const sessionId = tokenParts[0];
-  const sessionSecret = tokenParts[1];
-
-  const session = await Sessions.getById(sessionId);
-  if (!session) {
-    return null;
-  }
-
-  const now = Date.now();
-
-  if (now - session.createdAt.getTime() >= sessionExpiresInSeconds * 1000) {
-    await Sessions.delete(sessionId);
-    return null;
-  }
-  const secretHash = Uint8Array.from(session.secretHash);
-
-  const tokenSecretHash = await hashSecret(sessionSecret);
-  const validSecret = constantTimeEqual(tokenSecretHash, secretHash);
-  if (!validSecret) {
-    return null;
-  }
-
-  return session;
-}
-
-async function hashSecret(secret: string): Promise<Uint8Array> {
-  const secretBytes = new TextEncoder().encode(secret);
-  const secretHashBuffer = await crypto.subtle.digest("SHA-256", secretBytes);
-  return new Uint8Array(secretHashBuffer);
-}
-function constantTimeEqual(a: Uint8Array, b: Uint8Array): boolean {
-  if (a.byteLength !== b.byteLength) {
-    return false;
-  }
-  let c = 0;
-  for (let i = 0; i < a.byteLength; i++) {
-    c |= a[i] ^ b[i];
-  }
-  return c === 0;
-}
+const ONE_HOUR = 1000 * 60 * 60;
 
 const Session = {
-  validate: validateSessionToken,
-  create: createSession,
+  REG_EXP_PERIOD: ONE_HOUR,
+  MAX_EXP_PERIOD: ONE_HOUR * 24 * 3, // 3 Days
+
+  async create(userId: string) {
+    const id = grc(24);
+    const expiresAt = this.getExpire();
+    const lastVerifiedAt = new Date();
+
+    await Sessions.create({
+      id,
+      userId,
+      expiresAt,
+      lastVerifiedAt,
+    });
+
+    const token = sign(id, process.env.AUTH_SECRET!);
+
+    return token;
+  },
+  async validate(token: string): Promise<ValidationResult> {
+    const now = new Date();
+
+    try {
+      // Verify that the token is actually a string
+      if (typeof token !== "string") throw new Error("Bad token");
+
+      const id = verify(token, process.env.AUTH_SECRET!);
+
+      // Check if it hasn't been verified
+      if (typeof id !== "string") throw new Error("Bad token");
+
+      // Retrieving the session for the DB
+      const session = await Sessions.get(id);
+
+      if (!session) throw new Error("No session");
+
+      // Check if the session has expired or not
+      if (+session.expiresAt < +now) {
+        await Sessions.delete(session.id);
+        throw new Error("Session expired");
+      }
+
+      // Update the expiration date if you has verified himself during the regular period
+      if (+now - +session.lastVerifiedAt >= (this.REG_EXP_PERIOD as number)) {
+        await Sessions.update(session.id, {
+          lastVerifiedAt: now,
+          expiresAt: this.getExpire(),
+        });
+      }
+
+      const user = await Users.getById(session.userId);
+
+      return { ok: true, user };
+    } catch (e) {
+      return {
+        ok: false,
+        message: e instanceof Error ? e.message : "Something went wrong",
+      };
+    }
+  },
+  getExpire() {
+    return new Date(Date.now() + (this.MAX_EXP_PERIOD as number));
+  },
 };
 
 export default Session;

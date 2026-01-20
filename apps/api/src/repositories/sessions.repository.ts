@@ -5,6 +5,11 @@ import db from "@db";
 import { sessions, type NewSession, type Session } from "@db/schemas/sessions";
 import { eq } from "drizzle-orm";
 
+interface UpdatableFiedls {
+  lastVerifiedAt?: Session["lastVerifiedAt"];
+  expiresAt?: Session["expiresAt"];
+}
+
 const Sessions = {
   async create(session: NewSession) {
     try {
@@ -14,7 +19,7 @@ const Sessions = {
     }
   },
 
-  async getById(id: string) {
+  async get(id: string) {
     const [user] = await db
       .select()
       .from(sessions)
@@ -22,6 +27,10 @@ const Sessions = {
       .limit(1);
 
     return user;
+  },
+
+  async update(id: string, session: UpdatableFiedls) {
+    await db.update(sessions).set(session).where(eq(sessions.id, id));
   },
 
   async delete(id: string) {

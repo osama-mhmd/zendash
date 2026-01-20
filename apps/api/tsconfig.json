@@ -29,7 +29,8 @@
       "@repos": ["src/repositories/_map.ts"],
       "@repos/*": ["src/repositories/*"],
       "@libs/*": ["src/libs/*"],
-      "@dto/*": ["src/dto/*"]
+      "@dto/*": ["src/dto/*"],
+      "@guards/*": ["src/guards/*"]
     }
   }
 }
