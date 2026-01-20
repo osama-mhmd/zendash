@@ -1,3 +1,4 @@
+import { Project } from "@db/schemas/projects";
 import { Injectable } from "@nestjs/common";
 import { Projects } from "@repos";
 
@@ -9,6 +10,15 @@ export interface ProjectToCreate {
   name: string;
   userId: string;
 }
+export type Result<T> =
+  | {
+      ok: false;
+      message: string;
+    }
+  | {
+      ok: true;
+      data: T;
+    };
 
 @Injectable()
 export class ProjectsService {
@@ -29,7 +39,7 @@ export class ProjectsService {
     }
   }
 
-  async get(pr: ProjectToGet) {
+  async get(pr: ProjectToGet): Promise<Result<Project>> {
     const privilege = await Projects.getPrivilege(pr);
 
     if (!privilege) {
@@ -41,6 +51,6 @@ export class ProjectsService {
 
     const project = await Projects.get(pr.projectId);
 
-    return project;
+    return { ok: true, data: project };
   }
 }

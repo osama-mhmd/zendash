@@ -14,7 +14,6 @@ export default class AuthGuard implements CanActivate {
 
     if (!result.ok) return false;
 
-    // @ts-expect-error
     req.user = result.user;
 
     return true;
