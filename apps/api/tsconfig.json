@@ -26,6 +26,7 @@
       "@db": ["src/db"],
       "@db/*": ["src/db/*"],
       "@modules/*": ["src/modules/*"],
+      "@repos": ["src/repositories/_map.ts"],
       "@repos/*": ["src/repositories/*"],
       "@libs/*": ["src/libs/*"],
       "@dto/*": ["src/dto/*"]

@@ -5,19 +5,12 @@ import {
   type Privilege,
 } from "@db/schemas/projects";
 import { and, eq } from "drizzle-orm";
+import { ProjectToCreate } from "@modules/projects/projects.service";
 
 const Projects = {
-  async create({ name, userId }: { name: string; userId: string }) {
-    try {
-      const [project] = await db.insert(projects).values({ name }).returning();
-      await db.insert(projectsPrivileges).values({
-        projectId: project.id,
-        userId: userId,
-        privilege: "owner",
-      });
-    } catch (e) {
-      console.log("Error Occurred when creating a user, err: ", e);
-    }
+  async create({ name }: ProjectToCreate) {
+    const [project] = await db.insert(projects).values({ name }).returning();
+    return project;
   },
   async createPrivilege({
     userId,
