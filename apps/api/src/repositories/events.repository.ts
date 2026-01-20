@@ -31,6 +31,14 @@ const Events = {
 
     return event;
   },
+  async getAll(projectId: string) {
+    const _events = await db
+      .select()
+      .from(events)
+      .where(eq(events.projectId, projectId));
+
+    return _events;
+  },
 };
 
 export default Events;
