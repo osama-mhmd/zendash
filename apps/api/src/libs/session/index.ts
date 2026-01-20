@@ -1,22 +1,13 @@
 import type { NewSession as Session } from "@db/schemas/sessions";
 import Sessions from "@repos/sessions.repository";
+import grc from "src/utils/grs";
 
 interface SessionWithToken extends Session {
   token: string;
 }
 
 const sessionExpiresInSeconds = 60 * 60 * 24;
-
-function generateSecureRandomString(): string {
-  const alphabet = "abcdefghijkmnpqrstuvwxyz23456789";
-  const bytes = new Uint8Array(24);
-  crypto.getRandomValues(bytes);
-  let id = "";
-  for (let i = 0; i < bytes.length; i++) {
-    id += alphabet[bytes[i] >> 3];
-  }
-  return id;
-}
+const generateSecureRandomString = () => grc(24);
 
 async function createSession(): Promise<SessionWithToken> {
   const id = generateSecureRandomString();

@@ -9,15 +9,18 @@ export const events = pgTable(
   "events",
   {
     id: text().notNull(),
-    projectId: uuid().references(() => projects.id),
+    projectId: uuid()
+      .references(() => projects.id)
+      .notNull(),
+    description: text().notNull(),
     // level: level().notNull(),
     // env: env().notNull(),
     // url: text().notNull(),
 
-    handled: boolean().notNull(),
+    handled: boolean().default(false).notNull(),
 
-    recievedAt: timestamp().notNull(),
-    // occurredAt: timestamp().defaultNow().notNull(),
+    recievedAt: timestamp().defaultNow().notNull(),
+    // occurredAt: timestamp().notNull(),
   },
   (tb) => [primaryKey({ columns: [tb.id, tb.projectId] })],
 );

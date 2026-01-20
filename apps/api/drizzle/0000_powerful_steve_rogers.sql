@@ -11,5 +11,5 @@ CREATE TABLE "users" (
 	"email" text NOT NULL,
 	"hashedPassword" text NOT NULL,
 	"isVerified" boolean DEFAULT false,
-	"createdAt" timestamp DEFAULT now()
+	"createdAt" timestamp DEFAULT now() NOT NULL
 );

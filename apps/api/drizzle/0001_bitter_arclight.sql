@@ -1,9 +1,10 @@
 CREATE TYPE "public"."privilege" AS ENUM('owner', 'admin', 'member');--> statement-breakpoint
 CREATE TABLE "events" (
 	"id" text NOT NULL,
-	"projectId" uuid,
-	"handled" boolean NOT NULL,
-	"recievedAt" timestamp NOT NULL,
+	"projectId" uuid NOT NULL,
+	"description" text NOT NULL,
+	"handled" boolean DEFAULT false NOT NULL,
+	"recievedAt" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "events_id_projectId_pk" PRIMARY KEY("id","projectId")
 );
 --> statement-breakpoint
