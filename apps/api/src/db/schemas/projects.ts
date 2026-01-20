@@ -10,15 +10,24 @@ export const projects = pgTable("projects", {
   createdAt: timestamp().defaultNow().notNull(),
 });
 
-export const privilege = pgEnum("privilege", ["owner", "admin", "member"]);
+const privileges = ["owner", "admin", "member"] as const;
+export const privilege = pgEnum("privilege", privileges);
 
 export const projectsPrivileges = pgTable(
   "projects_privileges",
   {
-    userId: uuid().references(() => users.id),
-    projectId: uuid().references(() => projects.id),
+    userId: uuid()
+      .references(() => users.id)
+      .notNull(),
+    projectId: uuid()
+      .references(() => projects.id)
+      .notNull(),
     privilege: privilege().default("member").notNull(),
     createdAt: timestamp().defaultNow().notNull(),
   },
   (tb) => [primaryKey({ columns: [tb.userId, tb.projectId] })],
 );
+
+export type Project = typeof projects.$inferSelect;
+export type NewProject = typeof projects.$inferInsert;
+export type Privilege = (typeof privileges)[number];

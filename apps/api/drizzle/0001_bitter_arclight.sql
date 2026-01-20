@@ -14,8 +14,8 @@ CREATE TABLE "projects" (
 );
 --> statement-breakpoint
 CREATE TABLE "projects_privileges" (
-	"userId" uuid,
-	"projectId" uuid,
+	"userId" uuid NOT NULL,
+	"projectId" uuid NOT NULL,
 	"privilege" "privilege" DEFAULT 'member' NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "projects_privileges_userId_projectId_pk" PRIMARY KEY("userId","projectId")
