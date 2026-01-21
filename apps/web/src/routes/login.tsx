@@ -5,16 +5,13 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/register")({
+export const Route = createFileRoute("/login")({
   component: RouteComponent,
 });
 
 interface Inputs {
-  fullname: string;
-  username: string;
   email: string;
   password: string;
-  passwordRepeat: string;
 }
 
 function RouteComponent() {
@@ -26,13 +23,11 @@ function RouteComponent() {
 
   const onSubmit: SubmitHandler<Inputs> = async (inputs) => {
     const body = {
-      fullname: inputs.fullname,
-      username: inputs.username,
       email: inputs.email,
       password: inputs.password,
     };
 
-    const result = await api("auth/register", { body });
+    const result = await api("auth/login", { body });
 
     if (!result.ok) {
       const message =
@@ -54,22 +49,10 @@ function RouteComponent() {
             className="flex flex-col space-y-2 mx-auto max-w-lg"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <h2 className="text-center font-game text-3xl">
-              Create an account
-            </h2>
+            <h2 className="text-center font-game text-3xl">Login</h2>
             <p className="text-muted-foreground text-center mt-1 mb-6">
               Start your stressless journey of debugging using Zendash.
             </p>
-            <Input
-              placeholder="Fullname..."
-              {...register("fullname", { required: true })}
-            />
-            {errors.fullname && <p>This field is required</p>}
-            <Input
-              placeholder="Username..."
-              {...register("username", { required: true })}
-            />
-            {errors.username && <p>This field is required</p>}
             <Input
               placeholder="Email..."
               {...register("email", { required: true })}
@@ -80,11 +63,6 @@ function RouteComponent() {
               {...register("password", { required: true })}
             />
             {errors.password && <p>This field is required</p>}
-            <Input
-              placeholder="Repeat password..."
-              {...register("passwordRepeat", { required: true })}
-            />
-            {errors.passwordRepeat && <p>This field is required</p>}
             <Button type="submit">Submit</Button>
           </form>
         </div>
