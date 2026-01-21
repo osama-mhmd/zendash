@@ -10,7 +10,7 @@ function App() {
     <main>
       <section>
         <div className="cnt text-center flex flex-col items-center gap-y-2 mt-36">
-          <h1 className="text-6xl">Zendash</h1>
+          <h1 className="text-6xl font-game">Zendash</h1>
           <p className="text-mutued-foreground">
             Debug like in a Game with Zen mode
           </p>

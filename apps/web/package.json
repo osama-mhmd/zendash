@@ -12,6 +12,8 @@
     "check": "prettier --write . && eslint --fix"
   },
   "dependencies": {
+    "@fontsource/changa-one": "^5.2.8",
+    "@fontsource/inter": "^5.2.8",
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/react-devtools": "^0.7.0",
     "@tanstack/react-router": "^1.132.0",
