@@ -24,16 +24,26 @@ function RouteComponent() {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = async (body) => {
-    const [res, err] = await api("auth/register", { body });
+  const onSubmit: SubmitHandler<Inputs> = async (inputs) => {
+    const body = {
+      fullname: inputs.fullname,
+      username: inputs.username,
+      email: inputs.username,
+      password: inputs.password,
+    };
 
-    if (err) {
-      toast.error("Something went wrong when trying to create an account");
+    const result = await api("auth/register", { body });
+
+    if (!result.ok) {
+      const message =
+        typeof result.message == "string"
+          ? result.message
+          : result.message.join(" ");
+      toast.error(message ?? "Something went wrong");
+      return;
     }
 
-    // res either returns {ok:true} | {ok:false,message}
-
-    if (res.ok) redirect({ to: "/" });
+    redirect({ to: "/" });
   };
 
   return (

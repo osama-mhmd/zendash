@@ -1,7 +1,6 @@
 import type { NewSession as Session } from "@db/schemas/sessions";
 import { User } from "@db/schemas/users";
-import { Users } from "@repos";
-import Sessions from "@repos/sessions.repository";
+import { Users, Sessions } from "@repos";
 import { sign, verify } from "jsonwebtoken";
 import grc from "src/utils/grs";
 

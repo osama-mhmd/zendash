@@ -57,11 +57,11 @@ export class AuthService {
       };
     }
 
-    const session = await Session.create();
+    const token = await Session.create(_user.id);
 
     return {
       ok: true,
-      token: session.token,
+      token: token,
     };
   }
 }
