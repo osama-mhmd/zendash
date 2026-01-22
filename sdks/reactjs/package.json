@@ -19,12 +19,13 @@
   "packageManager": "pnpm@10.26.1",
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
     "@types/react": "^19.2.8",
     "@vitejs/plugin-react": "^5.1.2",
+    "dotenv": "^17.2.3",
+    "jsdom": "^27.4.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.17",
-    "@testing-library/react": "^16.3.1",
-    "jsdom": "^27.4.0"
+    "vitest": "^4.0.17"
   },
   "peerDependencies": {
     "react": "^19.0.0"

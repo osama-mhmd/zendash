@@ -1,6 +1,11 @@
 import { render } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { Zendash } from "../dist";
+import { Zendash } from "../src";
+
+const options = {
+  apiKey: process.env.APIKEY!,
+  origin: process.env.BACKEND_URL!,
+};
 
 describe("Zendash Component", () => {
   beforeEach(() => {
@@ -12,7 +17,7 @@ describe("Zendash Component", () => {
   });
 
   it("should catch global window errors", () => {
-    render(<Zendash />);
+    render(<Zendash options={options} />);
 
     const errorEvent = new ErrorEvent("error", {
       message: "Test error",

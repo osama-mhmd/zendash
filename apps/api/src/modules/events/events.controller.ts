@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   Req,
   Res,
   UseGuards,
@@ -13,7 +14,6 @@ import type { Request, Response } from "express";
 import AuthGuard from "@guards/auth.guard";
 
 interface EventToCreate {
-  projectId: string;
   description: string;
 }
 interface EventToGet {
@@ -25,17 +25,19 @@ export class EventsController {
   constructor(readonly eventsService: EventsService) {}
 
   @UseGuards(AuthGuard)
-  @Post()
+  @Post("create")
   async create(
     @Res() res: Response,
     @Req() req: Request,
-    @Body() ev: EventToCreate,
+    @Body() { description }: EventToCreate,
+    @Query("projectId") projectId: string,
   ) {
-    if (!ev.description || !ev.projectId) res.status(400).json({ ok: false });
+    if (!description || !projectId) res.status(400).json({ ok: false });
 
     const result = await this.eventsService.create({
       userId: req.user!.id,
-      ...ev,
+      description,
+      projectId,
     });
 
     res.status(result.ok ? 200 : 400).json(result);
