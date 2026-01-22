@@ -1,7 +1,7 @@
-import { Body, Controller, Post, Res } from "@nestjs/common";
+import { Body, Controller, Post, Req, Res } from "@nestjs/common";
 
 import { AuthService } from "./auth.service";
-import type { Response } from "express";
+import type { Request, Response } from "express";
 import UserToLogin from "@dto/user/user-to-login.dto";
 import UserToCreate from "@dto/user/user-to-create.dto";
 
@@ -26,5 +26,13 @@ export class AuthController {
     const response = await this.authService.register(body);
 
     res.send(response);
+  }
+
+  @Post("me")
+  async me(@Req() req: Request, @Res() res: Response) {
+    const token = req.cookies["sessionToken"];
+    const result = await this.authService.me(token);
+
+    res.status(result.ok ? 200 : 400).send(result);
   }
 }

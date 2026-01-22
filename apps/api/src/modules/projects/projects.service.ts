@@ -53,4 +53,10 @@ export class ProjectsService {
 
     return { ok: true, data: project };
   }
+
+  async me(userId: string) {
+    const res = await Projects.getForUser(userId);
+
+    return res;
+  }
 }

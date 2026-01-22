@@ -37,6 +37,27 @@ const Projects = {
 
     return project;
   },
+  async getPrivileges({ userId }: { userId: string }) {
+    const privs = await db
+      .select()
+      .from(projectsPrivileges)
+      .where(eq(projectsPrivileges.userId, userId));
+
+    return privs;
+  },
+  async getForUser(userId: string) {
+    const _projects = await db
+      .select({
+        projectId: projects.id,
+        projectName: projects.name,
+        userId: projectsPrivileges.userId,
+      })
+      .from(projectsPrivileges)
+      .where(eq(projectsPrivileges.userId, userId))
+      .leftJoin(projects, eq(projectsPrivileges.projectId, projects.id));
+
+    return _projects;
+  },
   async getPrivilege({
     userId,
     projectId,

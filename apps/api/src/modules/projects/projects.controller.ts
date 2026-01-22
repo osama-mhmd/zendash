@@ -44,4 +44,14 @@ export class ProjectsController {
       userId: req.user!.id,
     });
   }
+
+  @UseGuards(AuthGuard)
+  @Post("me")
+  async me(@Req() req: Request, @Res() res: Response) {
+    const userId = req.user!.id;
+
+    const result = await this.projectsService.me(userId);
+
+    res.status(200).send({ ok: true, data: result });
+  }
 }

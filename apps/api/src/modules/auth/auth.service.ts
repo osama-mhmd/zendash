@@ -64,4 +64,10 @@ export class AuthService {
       token: token,
     };
   }
+
+  async me(token: string) {
+    const res = await Session.validate(token);
+
+    return res;
+  }
 }
