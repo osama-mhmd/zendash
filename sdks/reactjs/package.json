@@ -1,5 +1,5 @@
 {
-  "name": "@zendash/reactjs-sdk",
+  "name": "zendash-reactjs-sdk",
   "version": "0.0.1",
   "description": "The official SDK for ReactJS From Zendash",
   "type": "module",
