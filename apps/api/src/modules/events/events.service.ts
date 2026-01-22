@@ -75,4 +75,10 @@ export class EventsService {
       data: events,
     };
   }
+
+  async me(userId: string) {
+    const res = await Events.getForUser(userId);
+
+    return res;
+  }
 }

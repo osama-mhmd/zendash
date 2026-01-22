@@ -3,6 +3,7 @@
 
 import db from "@db";
 import { events } from "@db/schemas/events";
+import { projectsPrivileges } from "@db/schemas/projects";
 import { eq } from "drizzle-orm";
 import grc from "src/utils/grs";
 
@@ -30,6 +31,21 @@ const Events = {
       .limit(1);
 
     return event;
+  },
+  async getForUser(userId: string) {
+    const _events = await db
+      .select({
+        projectId: projectsPrivileges.projectId,
+        userId: projectsPrivileges.userId,
+        eventId: events.id,
+        eventDescription: events.description,
+        eventRecievedAt: events.recievedAt,
+      })
+      .from(projectsPrivileges)
+      .where(eq(projectsPrivileges.userId, userId))
+      .leftJoin(events, eq(projectsPrivileges.projectId, events.projectId));
+
+    return _events;
   },
   async getAll(projectId: string) {
     const _events = await db
