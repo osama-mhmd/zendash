@@ -11,6 +11,7 @@ interface UserProject {
   userId: string;
   projectId: string;
   projectName: string;
+  projectKey: string;
 }
 
 const validateSearch = z.object({
@@ -47,7 +48,7 @@ function RouteComponent() {
     error,
   } = useQuery({
     queryKey: ["projects"],
-    queryFn: () => api("projects/me"),
+    queryFn: async () => (await api("projects/me")).data,
   });
 
   if (isPending) return "Loading...";
@@ -83,9 +84,9 @@ function RouteComponent() {
           <div>
             <h2 className="text-3xl font-game mb-4">Projects</h2>
             <div className="flex flex-wrap gap-2">
-              {projects.data.map((pr: UserProject) => (
+              {projects.map((pr: UserProject) => (
                 <div className="p-2 px-4 rounded-md border" key={pr.projectId}>
-                  {pr.projectName}
+                  {pr.projectName}: {pr.projectKey}
                 </div>
               ))}
               <Button onClick={openCreateProjectDialog}>Create project</Button>

@@ -1,6 +1,6 @@
 import { Project } from "@db/schemas/projects";
 import { Injectable } from "@nestjs/common";
-import { Projects } from "@repos";
+import { Keys, Projects } from "@repos";
 
 export interface ProjectToGet {
   userId: string;
@@ -30,6 +30,7 @@ export class ProjectsService {
         userId: pr.userId,
         privilege: "owner",
       });
+      const key = await Keys.create({ projectId: project.id });
       return { ok: true };
     } catch (e) {
       return {
@@ -58,5 +59,15 @@ export class ProjectsService {
     const res = await Projects.getForUser(userId);
 
     return res;
+  }
+
+  async getKey(projectId: string) {
+    const _key = await Keys.get({ projectId });
+
+    if (_key) return _key.key;
+
+    const key = await Keys.create({ projectId });
+
+    return key;
   }
 }

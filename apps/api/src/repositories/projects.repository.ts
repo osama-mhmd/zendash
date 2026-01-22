@@ -6,6 +6,7 @@ import {
 } from "@db/schemas/projects";
 import { and, eq } from "drizzle-orm";
 import { ProjectToCreate } from "@modules/projects/projects.service";
+import { keys } from "@db/schemas/keys";
 
 const Projects = {
   async create({ name }: ProjectToCreate) {
@@ -51,10 +52,12 @@ const Projects = {
         projectId: projects.id,
         projectName: projects.name,
         userId: projectsPrivileges.userId,
+        projectKey: keys.key,
       })
       .from(projectsPrivileges)
       .where(eq(projectsPrivileges.userId, userId))
-      .leftJoin(projects, eq(projectsPrivileges.projectId, projects.id));
+      .innerJoin(projects, eq(projectsPrivileges.projectId, projects.id))
+      .leftJoin(keys, eq(projectsPrivileges.projectId, keys.projectId));
 
     return _projects;
   },
