@@ -57,7 +57,13 @@ const Projects = {
       .from(projectsPrivileges)
       .where(eq(projectsPrivileges.userId, userId))
       .innerJoin(projects, eq(projectsPrivileges.projectId, projects.id))
-      .leftJoin(keys, eq(projectsPrivileges.projectId, keys.projectId));
+      .leftJoin(
+        keys,
+        and(
+          eq(projectsPrivileges.projectId, keys.projectId),
+          eq(projectsPrivileges.userId, keys.userId),
+        ),
+      );
 
     return _projects;
   },

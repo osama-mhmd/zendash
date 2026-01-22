@@ -4,9 +4,9 @@ import { eq } from "drizzle-orm";
 import grc from "src/utils/grs";
 
 const Keys = {
-  async create({ projectId }: { projectId: string }) {
+  async create({ projectId, userId }: { projectId: string; userId: string }) {
     const key = grc(24);
-    await db.insert(keys).values({ key, projectId });
+    await db.insert(keys).values({ key, projectId, userId });
     return key;
   },
 
@@ -18,6 +18,16 @@ const Keys = {
       .limit(1);
 
     return key;
+  },
+
+  async key(key: string) {
+    const [_key] = await db
+      .select()
+      .from(keys)
+      .where(eq(keys.key, key))
+      .limit(1);
+
+    return _key;
   },
 };
 

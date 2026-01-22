@@ -30,7 +30,10 @@ export class ProjectsService {
         userId: pr.userId,
         privilege: "owner",
       });
-      const key = await Keys.create({ projectId: project.id });
+      const key = await Keys.create({
+        projectId: project.id,
+        userId: pr.userId,
+      });
       return { ok: true };
     } catch (e) {
       return {
@@ -61,12 +64,12 @@ export class ProjectsService {
     return res;
   }
 
-  async getKey(projectId: string) {
+  async getKey(projectId: string, userId: string) {
     const _key = await Keys.get({ projectId });
 
     if (_key) return _key.key;
 
-    const key = await Keys.create({ projectId });
+    const key = await Keys.create({ projectId, userId });
 
     return key;
   }

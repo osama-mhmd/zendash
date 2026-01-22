@@ -52,7 +52,7 @@ export class ProjectsController {
     @Req() req: Request,
     @Param("id") id: string,
   ) {
-    const result = await this.projectsService.getKey(id);
+    const result = await this.projectsService.getKey(id, req.user!.id);
 
     res.status(200).send({ ok: true, key: result });
   }
