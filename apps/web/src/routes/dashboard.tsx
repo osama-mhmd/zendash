@@ -14,6 +14,14 @@ interface UserProject {
   projectKey: string;
 }
 
+interface ProjectEvent {
+  projectId: string;
+  userId: string;
+  eventId: string | null;
+  eventDescription: string | null;
+  eventRecievedAt: Date | null;
+}
+
 const validateSearch = z.object({
   createProject: z.string().or(z.undefined()),
 });
@@ -42,13 +50,14 @@ function RouteComponent() {
     })();
   }, []);
 
-  const {
-    data: projects,
-    isPending,
-    error,
-  } = useQuery({
+  const { data, isPending, error } = useQuery({
     queryKey: ["projects"],
-    queryFn: async () => (await api("projects/me")).data,
+    queryFn: async () => {
+      const projects = (await api("projects/me")).data;
+      const events = (await api("events/me")).data;
+
+      return { projects, events };
+    },
   });
 
   if (isPending) return "Loading...";
@@ -80,11 +89,11 @@ function RouteComponent() {
   return (
     <main>
       <section>
-        <div className="cnt flex flex-col gap-12 py-16">
+        <div className="cnt flex flex-col gap-6 py-16">
           <div>
             <h2 className="text-3xl font-game mb-4">Projects</h2>
             <div className="flex flex-wrap gap-2">
-              {projects.map((pr: UserProject) => (
+              {data.projects.map((pr: UserProject) => (
                 <div className="p-2 px-4 rounded-md border" key={pr.projectId}>
                   {pr.projectName}: {pr.projectKey}
                 </div>
@@ -92,7 +101,16 @@ function RouteComponent() {
               <Button onClick={openCreateProjectDialog}>Create project</Button>
             </div>
           </div>
-          <h2 className="text-3xl font-game">Events</h2>
+          <div>
+            <h2 className="text-3xl font-game mb-4">Events</h2>
+            <div className="flex flex-wrap gap-2">
+              {data.events.map((ev: ProjectEvent) => (
+                <div className="p-2 px-4 rounded-md border" key={ev.eventId}>
+                  {ev.eventDescription}: {ev.eventId}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
       {typeof createProject == "string" && (

@@ -43,7 +43,7 @@ const Events = {
       })
       .from(projectsPrivileges)
       .where(eq(projectsPrivileges.userId, userId))
-      .leftJoin(events, eq(projectsPrivileges.projectId, events.projectId));
+      .innerJoin(events, eq(projectsPrivileges.projectId, events.projectId));
 
     return _events;
   },
