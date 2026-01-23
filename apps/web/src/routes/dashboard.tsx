@@ -5,7 +5,6 @@ import Input from "@/components/ui/input";
 import Button from "@/components/ui/button";
 import { toast } from "sonner";
 import * as z from "zod";
-import { useEffect } from "react";
 
 interface UserProject {
   userId: string;
@@ -23,32 +22,21 @@ interface ProjectEvent {
 }
 
 const validateSearch = z.object({
-  createProject: z.string().or(z.undefined()),
+  createProject: z.optional(z.string()),
 });
 
 export const Route = createFileRoute("/dashboard")({
   component: RouteComponent,
+  loader: () => api.authenticated(),
   validateSearch,
 });
 
 function RouteComponent() {
   const { createProject } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
+  const { authenticated } = Route.useLoaderData();
 
-  useEffect(() => {
-    (async () => {
-      const result = await api("auth/me");
-
-      if (!result.ok) {
-        toast.error("Sorry, but you have no access. " + result.message);
-        return;
-      }
-
-      toast.success(
-        "Hello " + result.user.fullname + ", hope you enjoy Zendash.",
-      );
-    })();
-  }, []);
+  if (!authenticated) navigate({ to: "/login" });
 
   const { data, isPending, error } = useQuery({
     queryKey: ["projects"],
@@ -59,8 +47,6 @@ function RouteComponent() {
       return { projects, events };
     },
   });
-
-  if (isPending) return "Loading...";
 
   if (error) return "An error has occurred: " + error.message;
 
@@ -93,22 +79,29 @@ function RouteComponent() {
           <div>
             <h2 className="text-3xl font-game mb-4">Projects</h2>
             <div className="flex flex-wrap gap-2">
-              {data.projects.map((pr: UserProject) => (
-                <div className="p-2 px-4 rounded-md border" key={pr.projectId}>
-                  {pr.projectName}: {pr.projectKey}
-                </div>
-              ))}
+              {isPending && "Fetching projects"}
+              {!isPending &&
+                data.projects.map((pr: UserProject) => (
+                  <div
+                    className="p-2 px-4 rounded-md border"
+                    key={pr.projectId}
+                  >
+                    {pr.projectName}: {pr.projectKey}
+                  </div>
+                ))}
               <Button onClick={openCreateProjectDialog}>Create project</Button>
             </div>
           </div>
           <div>
             <h2 className="text-3xl font-game mb-4">Events</h2>
             <div className="flex flex-wrap gap-2">
-              {data.events.map((ev: ProjectEvent) => (
-                <div className="p-2 px-4 rounded-md border" key={ev.eventId}>
-                  {ev.eventDescription}: {ev.eventId}
-                </div>
-              ))}
+              {isPending && "Fetching events"}
+              {!isPending &&
+                data.events.map((ev: ProjectEvent) => (
+                  <div className="p-2 px-4 rounded-md border" key={ev.eventId}>
+                    {ev.eventDescription}: {ev.eventId}
+                  </div>
+                ))}
             </div>
           </div>
         </div>

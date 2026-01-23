@@ -1,12 +1,13 @@
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import api from "@/libs/api";
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useForm, type FieldError, type SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/register")({
   component: RouteComponent,
+  loader: () => api.authenticated(),
 });
 
 interface Inputs {
@@ -17,12 +18,28 @@ interface Inputs {
   passwordRepeat: string;
 }
 
+/**
+ * @description A required attr with custom message [used for react-hook-form]
+ */
+export const required = {
+  value: true,
+  message: "This field is required",
+};
+
+export const ErrorFeild = ({ error }: { error: FieldError | undefined }) => {
+  return error && <p className="p-2 bg-red-900">{error.message}</p>;
+};
+
 function RouteComponent() {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
+  const navigate = useNavigate();
+  const { authenticated } = Route.useLoaderData();
+
+  if (authenticated) navigate({ to: "/dashboard" });
 
   const onSubmit: SubmitHandler<Inputs> = async (inputs) => {
     const body = {
@@ -43,7 +60,7 @@ function RouteComponent() {
       return;
     }
 
-    redirect({ to: "/" });
+    navigate({ to: "/login" });
   };
 
   return (
@@ -62,29 +79,35 @@ function RouteComponent() {
             </p>
             <Input
               placeholder="Fullname..."
-              {...register("fullname", { required: true })}
+              {...register("fullname", { required })}
             />
-            {errors.fullname && <p>This field is required</p>}
+            <ErrorFeild error={errors.fullname} />
             <Input
               placeholder="Username..."
-              {...register("username", { required: true })}
+              {...register("username", { required })}
             />
-            {errors.username && <p>This field is required</p>}
+            <ErrorFeild error={errors.username} />
             <Input
               placeholder="Email..."
-              {...register("email", { required: true })}
+              type="email"
+              {...register("email", { required })}
             />
-            {errors.email && <p>This field is required</p>}
+            <ErrorFeild error={errors.email} />
             <Input
               placeholder="Password..."
-              {...register("password", { required: true })}
+              type="password"
+              {...register("password", { required })}
             />
-            {errors.password && <p>This field is required</p>}
+            <ErrorFeild error={errors.password} />
             <Input
               placeholder="Repeat password..."
-              {...register("passwordRepeat", { required: true })}
+              type="password"
+              {...register("passwordRepeat", { required })}
             />
-            {errors.passwordRepeat && <p>This field is required</p>}
+            <ErrorFeild error={errors.passwordRepeat} />
+            <Link to="/login" className="link">
+              Already have an account? Log in
+            </Link>
             <Button type="submit">Submit</Button>
           </form>
         </div>

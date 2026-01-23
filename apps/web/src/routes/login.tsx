@@ -1,12 +1,14 @@
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import api from "@/libs/api";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
+import { ErrorFeild, required } from "./register";
 
 export const Route = createFileRoute("/login")({
   component: RouteComponent,
+  loader: () => api.authenticated(),
 });
 
 interface Inputs {
@@ -20,6 +22,10 @@ function RouteComponent() {
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
+  const navigate = useNavigate();
+  const { authenticated } = Route.useLoaderData();
+
+  if (authenticated) navigate({ to: "/dashboard" });
 
   const onSubmit: SubmitHandler<Inputs> = async (inputs) => {
     const body = {
@@ -38,7 +44,7 @@ function RouteComponent() {
       return;
     }
 
-    redirect({ to: "/" });
+    navigate({ to: "/" });
   };
 
   return (
@@ -55,14 +61,17 @@ function RouteComponent() {
             </p>
             <Input
               placeholder="Email..."
-              {...register("email", { required: true })}
+              {...register("email", { required })}
             />
-            {errors.email && <p>This field is required</p>}
+            <ErrorFeild error={errors.email} />
             <Input
               placeholder="Password..."
-              {...register("password", { required: true })}
+              {...register("password", { required })}
             />
-            {errors.password && <p>This field is required</p>}
+            <ErrorFeild error={errors.password} />
+            <Link to="/register" className="link">
+              Already have an account? Sign in
+            </Link>
             <Button type="submit">Submit</Button>
           </form>
         </div>

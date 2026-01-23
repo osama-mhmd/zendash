@@ -19,6 +19,9 @@ input,
 textarea {
   @apply outline-0 focus:border-outline-focus;
 }
+.link {
+  @apply text-blue-400 underline;
+}
 
 body {
   @apply m-0 text-foreground bg-background;
