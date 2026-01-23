@@ -1,2 +1,2 @@
-name = "zendash-backend"
+name = "zendash"
 main = "dist/index.js"
