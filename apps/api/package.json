@@ -9,7 +9,7 @@
     "build": "nest build -c ./nest-cli.json",
     "dev": "nest start --env-file .env --watch",
     "debug": "nest start --env-file .env --debug --watch",
-    "preview": "node dist/src/modules/main",
+    "preview": "node dist/src/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate"
