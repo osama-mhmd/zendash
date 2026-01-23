@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
+    "build": "nest build -c ./nest-cli.json",
     "dev": "nest start --env-file .env --watch",
     "debug": "nest start --env-file .env --debug --watch",
     "preview": "node dist/src/modules/main",
