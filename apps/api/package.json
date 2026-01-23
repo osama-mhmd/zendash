@@ -6,10 +6,10 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build --env-file .env",
+    "build": "nest build",
     "dev": "nest start --env-file .env --watch",
     "debug": "nest start --env-file .env --debug --watch",
-    "preview": "node dist/main",
+    "preview": "node dist/src/modules/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate"
