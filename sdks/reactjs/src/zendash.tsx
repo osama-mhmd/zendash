@@ -1,27 +1,34 @@
 import { useEffect } from "react";
 
 interface ZendashProps {
-  options: {
-    apiKey: string;
-    origin: string;
-  };
+  apiKey: string;
+
+  // options: {
+  //   apiKey: string;
+  //   origin: string;
+  // };
 }
 
-export default function Zendash({ options }: ZendashProps): React.ReactNode {
+export default function Zendash({ apiKey }: ZendashProps): React.ReactNode {
+  const [origin, _rest] = apiKey.split("?");
+  const [projectId, key] = _rest.split("&");
+
   useEffect(() => {
     const handleCapture = async (event: ErrorEvent) => {
       console.log("Error caught");
-      const [url, query] = options.origin.split("?");
-      const result = await fetch(`${url}/events/create?${query}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const result = await fetch(
+        `${origin}/events/create?projectId=${projectId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            description: event.message,
+            key,
+          }),
         },
-        body: JSON.stringify({
-          description: event.message,
-          key: options.apiKey,
-        }),
-      });
+      );
     };
 
     window.addEventListener("error", handleCapture);

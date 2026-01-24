@@ -36,7 +36,7 @@ const validateSearch = z.object({
 const codeToConnect = `import { Zendash } from "zendash-reactjs-sdk";
 
 // And in your root component
-<Zendash key={[YOUR PROJECT KEY]} />`;
+<Zendash apiKey={[YOUR PROJECT KEY]} />`;
 
 export const Route = createFileRoute("/dashboard")({
   component: RouteComponent,
@@ -108,7 +108,7 @@ function RouteComponent() {
           {!isPending && data?.projects.length > 0 && (
             <div className="p-2 rounded border">
               {data.projects.map((pr: UserProject) => {
-                const c = `${import.meta.env.VITE_BACKEND_URL}?id=${pr.projectId}&key=${pr.projectKey}`;
+                const c = `${import.meta.env.VITE_BACKEND_URL}?${pr.projectId}&${pr.projectKey}`;
 
                 return (
                   <div key={pr.projectId}>
