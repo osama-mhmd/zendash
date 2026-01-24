@@ -16,7 +16,7 @@ export default function Button({
   return (
     <Comp
       className={cn(
-        "cursor-pointer border rounded-sm py-2 px-4 pb-1.5",
+        "cursor-pointer border rounded-sm py-2 px-4 pb-1.5 flex items-center gap-2",
         className,
       )}
       {...props}

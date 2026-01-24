@@ -4,9 +4,9 @@
 
 @theme {
   --color-foreground: var(--color-white);
-  --color-background: var(--color-gray-950);
-  --color-mutued: var(--color-gray-900);
-  --color-mutued-foreground: var(--color-gray-400);
+  --color-background: #0a0a0a;
+  --color-muted: #181818;
+  --color-muted-foreground: var(--color-gray-400);
   --color-border: var(--color-gray-800);
   --color-outline-focus: var(--color-gray-700);
   --font-game: "Changa One";

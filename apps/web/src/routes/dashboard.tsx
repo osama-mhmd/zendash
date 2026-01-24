@@ -5,6 +5,14 @@ import Input from "@/components/ui/input";
 import Button from "@/components/ui/button";
 import { toast } from "sonner";
 import * as z from "zod";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  UngroupLayersIcon,
+  PlusSignCircleIcon,
+  Loading03Icon,
+} from "@hugeicons/core-free-icons";
+import { Panel, PanelAction, PanelBody } from "@/components/ui/panel";
+import Command from "@/components/ui/command";
 
 interface UserProject {
   userId: string;
@@ -22,7 +30,7 @@ interface ProjectEvent {
 }
 
 const validateSearch = z.object({
-  createProject: z.optional(z.string()),
+  projects: z.optional(z.string()),
 });
 
 export const Route = createFileRoute("/dashboard")({
@@ -32,7 +40,7 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 function RouteComponent() {
-  const { createProject } = Route.useSearch();
+  const { projects } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
   const { authenticated } = Route.useLoaderData();
 
@@ -65,37 +73,108 @@ function RouteComponent() {
     }
 
     toast.success("Project created successfully.");
-    navigate({ search: { createProject: undefined } });
-  };
-
-  const openCreateProjectDialog = () => {
-    navigate({ search: { createProject: "" } });
+    navigate({ search: { projects: undefined } });
   };
 
   return (
     <main>
-      <section>
-        <div className="cnt flex flex-col gap-6 py-16">
-          <div>
-            <h2 className="text-3xl font-game mb-4">Projects</h2>
-            <div className="flex flex-wrap gap-2">
-              {isPending && "Fetching projects"}
-              {!isPending &&
-                data.projects.map((pr: UserProject) => (
-                  <div
-                    className="p-2 px-4 rounded-md border"
-                    key={pr.projectId}
-                  >
-                    {pr.projectName}: {pr.projectKey}
-                  </div>
-                ))}
-              <Button onClick={openCreateProjectDialog}>Create project</Button>
+      <Panel
+        onOpen={() => navigate({ search: { projects: "" } })}
+        onClose={() => navigate({ search: { projects: undefined } })}
+        defaultValue={typeof projects == "string"}
+        overlayClose={false}
+      >
+        <PanelAction>
+          <div className="absolute -top-12 left-1/2 group h-28 -translate-x-1/2">
+            <div className="duration-400 bg-background group-hover:translate-y-14 transition p-2 border rounded-3xl">
+              <HugeiconsIcon
+                icon={UngroupLayersIcon}
+                size={55}
+                className="bg-muted p-3 rounded-2xl cursor-pointer"
+              />
             </div>
           </div>
+        </PanelAction>
+        <PanelBody className="space-y-2 bg-muted/50">
+          <h3 className="text-2xl font-game mb-2">Projects</h3>
+          {!isPending && data?.projects.length == 0 && (
+            <div className="italic">No projects</div>
+          )}
+          {!isPending && data?.projects.length > 0 && (
+            <div className="p-2 rounded border">
+              {data.projects.map((pr: UserProject) => {
+                const c = `${import.meta.env.VITE_BACKEND_URL}?id=${pr.projectId}&key=${pr.projectKey}`;
+
+                return (
+                  <div key={pr.projectId}>
+                    <div>{pr.projectName}</div>
+                    <div className="flex flex-col p-2 gap-2 border rounded my-2 bg-muted/75">
+                      <b className="flex gap-1 items-center">
+                        Connection string
+                      </b>
+                      <Command c={c} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          <Panel>
+            <PanelAction>
+              <Button>
+                <HugeiconsIcon
+                  className="mb-0.5"
+                  size={18}
+                  icon={PlusSignCircleIcon}
+                />
+                Create Project
+              </Button>
+            </PanelAction>
+            <PanelBody layer={2}>
+              <h3 className="text-xl font-game mb-2">Create project</h3>
+              <form
+                onSubmit={onSubmit}
+                className="grid gap-2 grid-cols-[1fr_auto]"
+              >
+                <Input placeholder="Name..." name="name" type="text" required />
+                <Button type="submit">Create</Button>
+              </form>
+            </PanelBody>
+          </Panel>
+        </PanelBody>
+      </Panel>
+      <section className="bg-[#0e0e0e] p-4">
+        <div className="bg-background p-3 border rounded-3xl min-h-screen flex flex-col gap-6">
           <div>
-            <h2 className="text-3xl font-game mb-4">Events</h2>
             <div className="flex flex-wrap gap-2">
-              {isPending && "Fetching events"}
+              {isPending && (
+                <div className="flex mx-auto translate-y-12 items-center gap-2 bg-muted p-2 rounded">
+                  <HugeiconsIcon
+                    className="animate-spin [animation-duration:2s]"
+                    icon={Loading03Icon}
+                  />
+                  Fetching events
+                </div>
+              )}
+              {!isPending && data.projects.length == 0 && (
+                <div className="bg-muted w-full p-6 italic rounded-2xl">
+                  You don't have any active projects{" "}
+                  <p className="text-muted-foreground">
+                    *try using the top bar to open projects
+                  </p>
+                </div>
+              )}
+              {!isPending &&
+                data.projects.length > 0 &&
+                data.events.length == 0 && (
+                  <div className="bg-muted w-full p-6 italic rounded-2xl">
+                    <b>Congrats!</b> All you have to do now is just to connect
+                    your project with the api.
+                    <p className="text-muted-foreground">
+                      *try using the top bar to open projects to see the key
+                    </p>
+                  </div>
+                )}
               {!isPending &&
                 data.events.map((ev: ProjectEvent) => (
                   <div className="p-2 px-4 rounded-md border" key={ev.eventId}>
@@ -106,20 +185,6 @@ function RouteComponent() {
           </div>
         </div>
       </section>
-      {typeof createProject == "string" && (
-        <div className="absolute top-0 left-0 w-full h-full bg-black/35 z-10 flex items-center justify-center">
-          <div className="bg-mutued min-w-lg p-4 rounded-md">
-            <h3 className="text-xl font-game mb-2">Create project</h3>
-            <form
-              onSubmit={onSubmit}
-              className="grid gap-2 grid-cols-[1fr_auto]"
-            >
-              <Input placeholder="Name..." name="name" type="text" required />
-              <Button type="submit">Create</Button>
-            </form>
-          </div>
-        </div>
-      )}
     </main>
   );
 }
