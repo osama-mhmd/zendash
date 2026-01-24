@@ -12,15 +12,17 @@
   --font-game: "Changa One";
 }
 
-* {
-  @apply border-border;
-}
-input,
-textarea {
-  @apply outline-0 focus:border-outline-focus;
-}
-.link {
-  @apply text-blue-400 underline;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  input,
+  textarea {
+    @apply outline-0 focus:border-outline-focus;
+  }
+  .link {
+    @apply text-blue-400 underline;
+  }
 }
 
 body {

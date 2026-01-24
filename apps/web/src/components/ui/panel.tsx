@@ -95,7 +95,10 @@ function PanelBody({ children, className, layer }: PanelBodyProps) {
             <HugeiconsIcon
               icon={Close}
               size={30}
-              onClick={() => setVisiblity(false)}
+              onClick={() => {
+                onClose();
+                setVisiblity(false);
+              }}
               className="p-1.5 cursor-pointer rounded-full border absolute right-2 top-2"
             />
             {children}

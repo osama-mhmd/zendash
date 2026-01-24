@@ -33,6 +33,11 @@ const validateSearch = z.object({
   projects: z.optional(z.string()),
 });
 
+const codeToConnect = `import { Zendash } from "zendash-reactjs-sdk";
+
+// And in your root component
+<Zendash key={[YOUR PROJECT KEY]} />`;
+
 export const Route = createFileRoute("/dashboard")({
   component: RouteComponent,
   loader: () => api.authenticated(),
@@ -95,7 +100,7 @@ function RouteComponent() {
             </div>
           </div>
         </PanelAction>
-        <PanelBody className="space-y-2 bg-muted/50">
+        <PanelBody className="space-y-2 bg-[#0F0F0F]">
           <h3 className="text-2xl font-game mb-2">Projects</h3>
           {!isPending && data?.projects.length == 0 && (
             <div className="italic">No projects</div>
@@ -167,12 +172,23 @@ function RouteComponent() {
               {!isPending &&
                 data.projects.length > 0 &&
                 data.events.length == 0 && (
-                  <div className="bg-muted w-full p-6 italic rounded-2xl">
+                  <div className="bg-muted/50 w-full p-6 italic rounded-2xl">
                     <b>Congrats!</b> All you have to do now is just to connect
                     your project with the api.
-                    <p className="text-muted-foreground">
-                      *try using the top bar to open projects to see the key
-                    </p>
+                    <div className="not-italic max-w-lg space-y-2 p-2 border rounded my-4">
+                      <div className="font-bold">
+                        How to connect your project
+                      </div>
+                      <div>
+                        Just install the following package (we currently support
+                        reactjs)
+                        <Command c="pnpm i -D zendash-reactjs-sdk" />
+                      </div>
+                      <div>
+                        Connect your project
+                        <Command mutliline c={codeToConnect} />
+                      </div>
+                    </div>
                   </div>
                 )}
               {!isPending &&
