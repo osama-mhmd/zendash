@@ -29,7 +29,6 @@ interface TimeAgo {
 }
 
 function _timeAgo(date: Date | number | string): TimeAgoResult {
-  console.log(+new Date(date) - Date.now());
   const _now = new Date();
   const now = _now.getTime() - _now.getTimezoneOffset() * 60000;
   const past = new Date(date).getTime();

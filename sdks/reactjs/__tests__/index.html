@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <pre></pre>
+    <script type="module">
+      window.addEventListener("error", (ev) => {
+        const pre = document.querySelector("pre");
+
+        const event = {
+          isTrusted: ev.isTrusted,
+          colno: ev.colno,
+          error: {
+            message: ev.error.message,
+            stack: ev.error.stack,
+          },
+          eventPhase: ev.eventPhase,
+          filename: ev.filename,
+          lineno: ev.lineno,
+          message: ev.message,
+          timeStamp: ev.timeStamp,
+          type: ev.type,
+          platform: navigator.platform,
+          userAgent: navigator.userAgnet,
+          userAgentData: {
+            browser: {
+              name: navigator.userAgentData.brands[0].brand,
+              version: navigator.userAgentData.brands[0].version,
+            },
+            platform: navigator.userAgentData.platform,
+          },
+        };
+
+        console.log(ev);
+
+        pre.innerHTML = JSON.stringify(event, null, 2);
+      });
+    </script>
+
+    <script type="module">
+      throw new Error("Error test");
+    </script>
+  </body>
+</html>
