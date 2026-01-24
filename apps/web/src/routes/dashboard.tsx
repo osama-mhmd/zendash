@@ -13,6 +13,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { Panel, PanelAction, PanelBody } from "@/components/ui/panel";
 import Command from "@/components/ui/command";
+import { timeAgo } from "@/utils";
 
 interface UserProject {
   userId: string;
@@ -26,7 +27,7 @@ interface ProjectEvent {
   userId: string;
   eventId: string | null;
   eventDescription: string | null;
-  eventRecievedAt: Date | null;
+  eventRecievedAt: string | null;
 }
 
 const validateSearch = z.object({
@@ -191,12 +192,23 @@ function RouteComponent() {
                     </div>
                   </div>
                 )}
-              {!isPending &&
-                data.events.map((ev: ProjectEvent) => (
-                  <div className="p-2 px-4 rounded-md border" key={ev.eventId}>
-                    {ev.eventDescription}: {ev.eventId}
-                  </div>
-                ))}
+              <div className="flex flex-col w-full">
+                {!isPending &&
+                  data.events.map((ev: ProjectEvent) => (
+                    <div
+                      className="p-2 px-4 rounded-2xl border border-red-900 bg-red-900/25"
+                      key={ev.eventId}
+                    >
+                      <h3 className="text-xl font-semibold text-red-600">
+                        Error <code>#{ev.eventId}</code>
+                      </h3>
+                      <div>
+                        <code>@desc</code> {ev.eventDescription}
+                      </div>
+                      <div>Recieved {timeAgo.format(ev.eventRecievedAt!)}</div>
+                    </div>
+                  ))}
+              </div>
             </div>
           </div>
         </div>
