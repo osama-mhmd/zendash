@@ -12,10 +12,8 @@ import {
 import { EventsService } from "./events.service";
 import type { Request, Response } from "express";
 import AuthGuard from "@guards/auth.guard";
+import EventToCreate from "@dto/event/event-to-create.dto";
 
-interface EventToCreate {
-  description: string;
-}
 interface EventToGet {
   projectId: string;
 }
@@ -27,16 +25,16 @@ export class EventsController {
   @Post("create")
   async create(
     @Res() res: Response,
-    @Body() body: EventToCreate,
+    @Body() ev: EventToCreate,
     @Query("projectId") projectId: string,
   ) {
-    if (!body || !body.description || !projectId) {
+    if (!projectId) {
       res.status(400).json({ ok: false });
       return;
     }
 
     const result = await this.eventsService.create({
-      description: body.description,
+      ...ev,
       projectId,
     });
 

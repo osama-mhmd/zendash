@@ -4,20 +4,19 @@
 import db from "@db";
 import { events } from "@db/schemas/events";
 import { projectsPrivileges } from "@db/schemas/projects";
-import { eq } from "drizzle-orm";
+import EventToCreate from "@dto/event/event-to-create.dto";
+import { eq, getTableColumns } from "drizzle-orm";
 import grc from "src/utils/grs";
 
 const Events = {
-  async create({
-    projectId,
-    description,
-  }: {
-    projectId: string;
-    description: string;
-  }) {
+  async create({ projectId, ...event }: EventToCreate & { projectId: string }) {
     try {
       const id = grc(6);
-      await db.insert(events).values({ id, projectId, description });
+      await db.insert(events).values({
+        ...event,
+        id,
+        projectId,
+      });
     } catch (e) {
       console.log("Error Occurred when creating a user, err: ", e);
     }
@@ -35,11 +34,7 @@ const Events = {
   async getForUser(userId: string) {
     const _events = await db
       .select({
-        projectId: projectsPrivileges.projectId,
-        userId: projectsPrivileges.userId,
-        eventId: events.id,
-        eventDescription: events.description,
-        eventRecievedAt: events.recievedAt,
+        ...getTableColumns(events),
       })
       .from(projectsPrivileges)
       .where(eq(projectsPrivileges.userId, userId))

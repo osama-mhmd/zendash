@@ -37,6 +37,10 @@ const Zendash: Zendash = {
       },
       body: JSON.stringify(payload),
     });
+
+    const j = await result.json();
+
+    console.log(j);
   },
 
   setHandlers() {
@@ -53,11 +57,13 @@ const Zendash: Zendash = {
       this.send({
         description: ev.error.message,
         stack: ev.error.stack,
-        type: ev.type,
+        level: ev.type,
         file: ev.filename,
+        env: "dev",
         source: "window.onerror",
         platform,
         browser,
+        occurredAt: new Date(),
       });
     });
   },

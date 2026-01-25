@@ -15,6 +15,20 @@
       "when": 1769078692787,
       "tag": "0001_strange_vivisector",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1769335416877,
+      "tag": "0002_curious_psylocke",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1769336401574,
+      "tag": "0003_fine_swarm",
+      "breakpoints": true
     }
   ]
 }

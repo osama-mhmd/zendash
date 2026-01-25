@@ -1,3 +1,4 @@
+import EventToCreate from "@dto/event/event-to-create.dto";
 import { Injectable } from "@nestjs/common";
 import { Events, Projects } from "@repos";
 
@@ -13,14 +14,8 @@ interface AllEventsToGet {
 
 @Injectable()
 export class EventsService {
-  async create({
-    description,
-    projectId,
-  }: {
-    description: string;
-    projectId: string;
-  }) {
-    await Events.create({ description, projectId });
+  async create(ev: EventToCreate & { projectId: string }) {
+    await Events.create(ev);
 
     return {
       ok: true,
