@@ -108,7 +108,8 @@ function RouteComponent() {
           {!isPending && data?.projects.length > 0 && (
             <div className="p-2 rounded border">
               {data.projects.map((pr: UserProject) => {
-                const c = `${import.meta.env.VITE_BACKEND_URL}/events/create?projectId=${pr.projectId}`;
+                const base = import.meta.resolve("/api");
+                const c = `${base}/events/create?projectId=${pr.projectId}`;
 
                 return (
                   <div key={pr.projectId}>

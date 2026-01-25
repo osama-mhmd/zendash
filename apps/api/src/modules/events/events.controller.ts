@@ -27,16 +27,16 @@ export class EventsController {
   @Post("create")
   async create(
     @Res() res: Response,
-    @Body() { description }: EventToCreate,
+    @Body() body: EventToCreate,
     @Query("projectId") projectId: string,
   ) {
-    if (!description || !projectId) {
+    if (!body || !body.description || !projectId) {
       res.status(400).json({ ok: false });
       return;
     }
 
     const result = await this.eventsService.create({
-      description,
+      description: body.description,
       projectId,
     });
 

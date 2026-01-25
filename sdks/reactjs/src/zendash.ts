@@ -30,7 +30,7 @@ const Zendash: Zendash = {
   setHandlers() {
     window.addEventListener("error", (ev) => {
       this.send({
-        description: ev.message,
+        description: ev.error.message,
       });
     });
   },
