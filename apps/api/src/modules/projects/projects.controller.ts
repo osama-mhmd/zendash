@@ -46,18 +46,6 @@ export class ProjectsController {
   }
 
   @UseGuards(AuthGuard)
-  @Get(":id/key")
-  async getKey(
-    @Res() res: Response,
-    @Req() req: Request,
-    @Param("id") id: string,
-  ) {
-    const result = await this.projectsService.getKey(id, req.user!.id);
-
-    res.status(200).send({ ok: true, key: result });
-  }
-
-  @UseGuards(AuthGuard)
   @Post("me")
   async me(@Req() req: Request, @Res() res: Response) {
     const userId = req.user!.id;

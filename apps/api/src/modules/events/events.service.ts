@@ -16,21 +16,10 @@ export class EventsService {
   async create({
     description,
     projectId,
-    userId,
   }: {
     description: string;
     projectId: string;
-    userId: string;
   }) {
-    const { privilege } = await Projects.getPrivilege({ projectId, userId });
-
-    if (!privilege) {
-      return {
-        ok: false,
-        message: "No access",
-      };
-    }
-
     await Events.create({ description, projectId });
 
     return {

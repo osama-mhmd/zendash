@@ -24,7 +24,6 @@ interface EventToGet {
 export class EventsController {
   constructor(readonly eventsService: EventsService) {}
 
-  @UseGuards(AuthGuard)
   @Post("create")
   async create(
     @Res() res: Response,
@@ -35,7 +34,6 @@ export class EventsController {
     if (!description || !projectId) res.status(400).json({ ok: false });
 
     const result = await this.eventsService.create({
-      userId: req.user!.id,
       description,
       projectId,
     });
