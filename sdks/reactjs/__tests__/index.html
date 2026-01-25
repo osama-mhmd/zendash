@@ -42,7 +42,13 @@
     </script>
 
     <script type="module">
-      throw new Error("Error test");
+      import Zendash from "../dist/zendash.js";
+
+      Zendash.init({
+        dns: "http://localhost:4000/events/create?projectId=e0b060ac-1938-4a7e-9b0b-df56d435e795",
+      });
+
+      throw new Error("Error test 2");
     </script>
   </body>
 </html>
