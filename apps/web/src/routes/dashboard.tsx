@@ -10,6 +10,7 @@ import {
   UngroupLayersIcon,
   PlusSignCircleIcon,
   Loading03Icon,
+  User02Icon,
 } from "@hugeicons/core-free-icons";
 import { Panel, PanelAction, PanelBody } from "@/components/ui/panel";
 import Command from "@/components/ui/command";
@@ -31,6 +32,7 @@ interface ProjectEvent {
 
 const validateSearch = z.object({
   projects: z.optional(z.string()),
+  user: z.optional(z.string()),
 });
 
 const codeToConnect = `import { Zendash } from "zendash-reactjs-sdk";
@@ -45,9 +47,9 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 function RouteComponent() {
-  const { projects } = Route.useSearch();
+  const { projects, user: userPanel } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
-  const { authenticated } = Route.useLoaderData();
+  const { authenticated, user } = Route.useLoaderData();
 
   if (!authenticated) navigate({ to: "/login" });
 
@@ -83,72 +85,101 @@ function RouteComponent() {
 
   return (
     <main>
-      <Panel
-        onOpen={() => navigate({ search: { projects: "" } })}
-        onClose={() => navigate({ search: { projects: undefined } })}
-        defaultValue={typeof projects == "string"}
-        overlayClose={false}
-      >
-        <PanelAction>
-          <div className="absolute -top-12 left-1/2 group h-28 -translate-x-1/2">
-            <div className="duration-400 bg-background group-hover:translate-y-14 transition p-2 border rounded-3xl">
+      <div className="absolute -top-12 left-1/2 group h-28 -translate-x-1/2">
+        <div className="duration-400 bg-background group-hover:translate-y-14 transition p-2 border rounded-3xl flex gap-2">
+          <Panel
+            onOpen={() => navigate({ search: { projects: "" } })}
+            onClose={() => navigate({ search: { projects: undefined } })}
+            defaultValue={typeof projects == "string"}
+            overlayClose={false}
+          >
+            <PanelAction>
               <HugeiconsIcon
                 icon={UngroupLayersIcon}
                 size={55}
                 className="bg-muted p-3 rounded-2xl cursor-pointer"
               />
-            </div>
-          </div>
-        </PanelAction>
-        <PanelBody className="space-y-2 bg-[#0F0F0F]">
-          <h3 className="text-2xl font-game mb-2">Projects</h3>
-          {!isPending && data?.projects.length == 0 && (
-            <div className="italic">No projects</div>
-          )}
-          {!isPending && data?.projects.length > 0 && (
-            <div className="p-2 rounded border">
-              {data.projects.map((pr: UserProject) => {
-                const base = import.meta.resolve("/api");
-                const c = `${base}/events/create?projectId=${pr.projectId}`;
-
-                return (
-                  <div key={pr.projectId}>
-                    <div>{pr.projectName}</div>
-                    <div className="flex flex-col p-2 gap-2 border rounded my-2 bg-muted/75">
-                      <b className="flex gap-1 items-center">
-                        Connection string
-                      </b>
-                      <Command c={c} />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-          <Panel>
-            <PanelAction>
-              <Button>
-                <HugeiconsIcon
-                  className="mb-0.5"
-                  size={18}
-                  icon={PlusSignCircleIcon}
-                />
-                Create Project
-              </Button>
             </PanelAction>
-            <PanelBody layer={2}>
-              <h3 className="text-xl font-game mb-2">Create project</h3>
-              <form
-                onSubmit={onSubmit}
-                className="grid gap-2 grid-cols-[1fr_auto]"
-              >
-                <Input placeholder="Name..." name="name" type="text" required />
-                <Button type="submit">Create</Button>
-              </form>
+            <PanelBody className="space-y-2 bg-[#0F0F0F]">
+              <h3 className="text-2xl font-game mb-2">Projects</h3>
+              {!isPending && data?.projects.length == 0 && (
+                <div className="italic">No projects</div>
+              )}
+              {!isPending && data?.projects.length > 0 && (
+                <div className="p-2 rounded border">
+                  {data.projects.map((pr: UserProject) => {
+                    const base = import.meta.resolve("/api");
+                    const c = `${base}/events/create?projectId=${pr.projectId}`;
+
+                    return (
+                      <div key={pr.projectId}>
+                        <div>{pr.projectName}</div>
+                        <div className="flex flex-col p-2 gap-2 border rounded my-2 bg-muted/75">
+                          <b className="flex gap-1 items-center">
+                            Connection string
+                          </b>
+                          <Command c={c} />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              <Panel>
+                <PanelAction>
+                  <Button>
+                    <HugeiconsIcon
+                      className="mb-0.5"
+                      size={18}
+                      icon={PlusSignCircleIcon}
+                    />
+                    Create Project
+                  </Button>
+                </PanelAction>
+                <PanelBody layer={2}>
+                  <h3 className="text-xl font-game mb-2">Create project</h3>
+                  <form
+                    onSubmit={onSubmit}
+                    className="grid gap-2 grid-cols-[1fr_auto]"
+                  >
+                    <Input
+                      placeholder="Name..."
+                      name="name"
+                      type="text"
+                      required
+                    />
+                    <Button type="submit">Create</Button>
+                  </form>
+                </PanelBody>
+              </Panel>
             </PanelBody>
           </Panel>
-        </PanelBody>
-      </Panel>
+          <Panel
+            defaultValue={typeof userPanel == "string"}
+            onOpen={() => navigate({ search: { user: "" } })}
+            onClose={() => navigate({ search: { user: undefined } })}
+          >
+            <PanelAction>
+              <HugeiconsIcon
+                icon={User02Icon}
+                size={55}
+                className="bg-muted p-3 rounded-2xl cursor-pointer"
+              />
+            </PanelAction>
+            <PanelBody>
+              <h3 className="text-xl font-game mb-4">User settings</h3>
+              <div className="grid grid-cols-2 gap-y-2">
+                <label>Fullname:</label>
+                <Input disabled value={user.fullname} />
+                <label>Username:</label>
+                <Input disabled value={user.username} />
+                <label>email:</label>
+                <Input disabled value={user.email} />
+              </div>
+            </PanelBody>
+          </Panel>
+        </div>
+      </div>
       <section className="bg-[#0e0e0e] p-4">
         <div className="bg-background p-3 border rounded-3xl min-h-screen flex flex-col gap-6">
           <div>
