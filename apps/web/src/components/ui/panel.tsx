@@ -74,7 +74,7 @@ function PanelBody({ children, className, layer }: PanelBodyProps) {
     <>
       {visible && (
         <div
-          className="fixed top-0 left-0 bg-black/30 w-full h-full flex items-center justify-center"
+          className="overlay"
           onMouseDown={(e) => {
             if (!overlayClose) return;
             if (e.currentTarget !== e.target) return;
@@ -83,10 +83,7 @@ function PanelBody({ children, className, layer }: PanelBodyProps) {
           }}
         >
           <div
-            className={cn(
-              "bg-muted p-4 px-6 max-w-xl w-full rounded-3xl border relative",
-              className,
-            )}
+            className={cn("panel", className)}
             onClick={(e) => e.stopPropagation()}
             style={{
               zIndex: (layer ?? 1) * 10,

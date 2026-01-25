@@ -23,6 +23,12 @@
   .link {
     @apply text-blue-400 underline;
   }
+  .overlay {
+    @apply fixed top-0 left-0 bg-black/30 w-full h-full flex items-center justify-center;
+  }
+  .panel {
+    @apply bg-[#0F0F0F] p-4 px-6 max-w-xl w-full rounded-3xl border relative;
+  }
 }
 
 body {

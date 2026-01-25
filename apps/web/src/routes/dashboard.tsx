@@ -14,7 +14,9 @@ import {
 } from "@hugeicons/core-free-icons";
 import { Panel, PanelAction, PanelBody } from "@/components/ui/panel";
 import Command from "@/components/ui/command";
-import { timeAgo } from "@/utils";
+// import { timeAgo } from "@/utils";
+import { Alert02Icon, AlertDiamondIcon } from "@hugeicons/core-free-icons";
+import React from "react";
 
 interface UserProject {
   userId: string;
@@ -22,12 +24,20 @@ interface UserProject {
   projectName: string;
 }
 
-interface ProjectEvent {
+interface Event {
   projectId: string;
-  userId: string;
-  eventId: string | null;
-  eventDescription: string | null;
-  eventRecievedAt: string | null;
+  id: string;
+  description: string;
+  level: "error" | "warning";
+  env: "prod" | "env";
+  stack: string;
+  file: string;
+  platform: string | null;
+  browser: string | null;
+  source: string | null;
+  handled: boolean;
+  recievedAt: Date;
+  occurredAt: Date;
 }
 
 const validateSearch = z.object({
@@ -50,6 +60,7 @@ function RouteComponent() {
   const { projects, user: userPanel } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
   const { authenticated, user } = Route.useLoaderData();
+  const [event, setEvent] = React.useState<null | Event>(null);
 
   if (!authenticated) navigate({ to: "/login" });
 
@@ -100,7 +111,7 @@ function RouteComponent() {
                 className="bg-muted p-3 rounded-2xl cursor-pointer"
               />
             </PanelAction>
-            <PanelBody className="space-y-2 bg-[#0F0F0F]">
+            <PanelBody className="space-y-2">
               <h3 className="text-2xl font-game mb-2">Projects</h3>
               {!isPending && data?.projects.length == 0 && (
                 <div className="italic">No projects</div>
@@ -223,22 +234,43 @@ function RouteComponent() {
                     </div>
                   </div>
                 )}
-              <div className="flex flex-col w-full">
+              <div className="grid grid-cols-3 gap-2 w-full">
                 {!isPending &&
-                  data.events.map((ev: ProjectEvent) => (
+                  data.events.map((ev: Event) => (
                     <div
-                      className="p-2 px-4 rounded-2xl border border-red-900 bg-red-900/25"
-                      key={ev.eventId}
+                      className="p-2 cursor-pointer transition px-4 rounded-2xl border bg-muted/25 hover:bg-muted/35 space-y-2"
+                      key={ev.id}
+                      onClick={() => setEvent(ev)}
                     >
-                      <h3 className="text-xl font-semibold text-red-600">
-                        Error <code>#{ev.eventId}</code>
+                      <h3 className="text-xl flex gap-2 my-2 font-bold">
+                        {ev.level == "error" ? (
+                          <HugeiconsIcon icon={Alert02Icon} />
+                        ) : (
+                          <HugeiconsIcon icon={AlertDiamondIcon} />
+                        )}{" "}
+                        {ev.description}
                       </h3>
                       <div>
-                        <code>@desc</code> {ev.eventDescription}
+                        <span className="p-1 px-3 inline-block bg-muted rounded-2xl">
+                          {ev.file}
+                        </span>
                       </div>
-                      <div>Recieved {timeAgo.format(ev.eventRecievedAt!)}</div>
+                      <div className="text-sm">
+                        {ev.handled ? (
+                          <span className="text-blue-400">Handled</span>
+                        ) : (
+                          <span className="text-red-400">Unhandled</span>
+                        )}
+                      </div>
                     </div>
                   ))}
+                {event && (
+                  <div onClick={() => setEvent(null)} className="overlay">
+                    <div className="panel" onClick={(e) => e.stopPropagation()}>
+                      <h3>{event.description}</h3>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
