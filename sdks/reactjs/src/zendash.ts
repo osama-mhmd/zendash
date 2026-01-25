@@ -18,7 +18,7 @@ const Zendash: Zendash = {
   },
 
   async send(payload) {
-    const result = await fetch(`${this.dns}/events/create`, {
+    const result = await fetch(this.dns!, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

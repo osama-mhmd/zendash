@@ -19,7 +19,6 @@ interface UserProject {
   userId: string;
   projectId: string;
   projectName: string;
-  projectKey: string;
 }
 
 interface ProjectEvent {
@@ -36,8 +35,8 @@ const validateSearch = z.object({
 
 const codeToConnect = `import { Zendash } from "zendash-reactjs-sdk";
 
-// And in your root component
-<Zendash apiKey={[YOUR PROJECT KEY]} />`;
+// And in the app entrypoint
+Zendash.init({ dns })`;
 
 export const Route = createFileRoute("/dashboard")({
   component: RouteComponent,
@@ -109,7 +108,7 @@ function RouteComponent() {
           {!isPending && data?.projects.length > 0 && (
             <div className="p-2 rounded border">
               {data.projects.map((pr: UserProject) => {
-                const c = `${import.meta.env.VITE_BACKEND_URL}?${pr.projectId}&${pr.projectKey}`;
+                const c = `${import.meta.env.VITE_BACKEND_URL}/events/create?projectId=${pr.projectId}`;
 
                 return (
                   <div key={pr.projectId}>
