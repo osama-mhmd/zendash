@@ -1,4 +1,3 @@
-import type { NewSession as Session } from "@db/schemas/sessions";
 import { User } from "@db/schemas/users";
 import { Users, Sessions } from "@repos";
 import { sign, verify } from "jsonwebtoken";
@@ -12,6 +11,8 @@ type ValidationResult =
   | {
       ok: true;
       user: User;
+      token: string;
+      expiresAt?: Date;
     };
 
 const ONE_HOUR = 1000 * 60 * 60;
@@ -22,7 +23,7 @@ const Session = {
 
   async create(userId: string) {
     const id = grc(24);
-    const expiresAt = this.getExpire();
+    const expiresAt: Date = this.getExpire();
     const lastVerifiedAt = new Date();
 
     await Sessions.create({
@@ -34,7 +35,7 @@ const Session = {
 
     const token = sign(id, process.env.AUTH_SECRET!);
 
-    return token;
+    return { token, expiresAt };
   },
   async validate(token: string): Promise<ValidationResult> {
     const now = new Date();
@@ -59,17 +60,21 @@ const Session = {
         throw new Error("Session expired");
       }
 
+      let expiresAt: undefined | Date;
+
       // Update the expiration date if you has verified himself during the regular period
       if (+now - +session.lastVerifiedAt >= (this.REG_EXP_PERIOD as number)) {
+        expiresAt = this.getExpire();
+
         await Sessions.update(session.id, {
           lastVerifiedAt: now,
-          expiresAt: this.getExpire(),
+          expiresAt,
         });
       }
 
       const user = await Users.getById(session.userId);
 
-      return { ok: true, user };
+      return { ok: true, user, token, expiresAt };
     } catch (e) {
       return {
         ok: false,

@@ -5,6 +5,17 @@ import Session from "@libs/session";
 import UserToLogin from "@dto/user/user-to-login.dto";
 import UserToCreate from "@dto/user/user-to-create.dto";
 
+type LoginResult =
+  | {
+      ok: false;
+      message: string;
+    }
+  | {
+      ok: true;
+      token: string;
+      expiresAt: Date;
+    };
+
 @Injectable()
 export class AuthService {
   async register(user: UserToCreate) {
@@ -38,7 +49,7 @@ export class AuthService {
     };
   }
 
-  async login(user: UserToLogin) {
+  async login(user: UserToLogin): Promise<LoginResult> {
     const _user = await Users.getByEmail(user.email);
 
     if (!_user) {
@@ -57,12 +68,9 @@ export class AuthService {
       };
     }
 
-    const token = await Session.create(_user.id);
+    const result = await Session.create(_user.id);
 
-    return {
-      ok: true,
-      token: token,
-    };
+    return { ...result, ok: true };
   }
 
   async me(token: string) {

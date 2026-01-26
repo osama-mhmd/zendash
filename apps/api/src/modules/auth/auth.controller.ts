@@ -10,15 +10,23 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post("login")
-  async login(@Body() body: UserToLogin, @Res() res: Response) {
+  async login(
+    @Body() body: UserToLogin,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const response = await this.authService.login(body);
 
     if (!response.ok) {
-      res.send(response);
+      return response;
     }
 
-    res.cookie("sessionToken", response.token);
-    res.send({ ok: true });
+    res.cookie("sessionToken", response.token, {
+      expires: response.expiresAt,
+      httpOnly: true,
+      path: "/",
+    });
+
+    return { ok: true };
   }
 
   @Post("register")
@@ -29,10 +37,22 @@ export class AuthController {
   }
 
   @Post("me")
-  async me(@Req() req: Request, @Res() res: Response) {
+  async me(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const token = req.cookies["sessionToken"];
     const result = await this.authService.me(token);
 
-    res.status(result.ok ? 200 : 400).send(result);
+    if (!result.ok) {
+      res.status(400);
+      return result;
+    }
+
+    if (result.expiresAt) {
+      res.cookie("sessionToken", result.token, {
+        expires: result.expiresAt,
+        httpOnly: true,
+        path: "/",
+      });
+    }
+    return { ok: true, user: result.user };
   }
 }
