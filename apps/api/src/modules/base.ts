@@ -28,7 +28,7 @@ export class BaseController {
   getHealth() {
     return this.health.check([
       () => this.db.checkHealth("database"),
-      () => this.memory.checkHeap("memory_heap", 150 * 1024 * 1024),
+      () => this.memory.checkHeap("memory", 150 * 1024 * 1024),
       () =>
         this.disk.checkStorage("storage", { thresholdPercent: 0.5, path: "/" }),
     ]);

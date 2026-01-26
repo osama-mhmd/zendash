@@ -1,5 +1,11 @@
 import api from "@/libs/api";
 import { cn } from "@/utils";
+import {
+  Database02Icon,
+  RamMemoryIcon,
+  Storage,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -38,24 +44,46 @@ function RouteComponent() {
           >
             Zendash is {data.status !== "ok" && "not "} working correctly.
           </p>
-          <ul className="flex flex-col gap-1 mt-2">
-            {Object.keys(data.info).map((key) => {
-              const status = data.info[key as keyof typeof data.info].status;
-              return (
-                <li
-                  key={key}
-                  className={cn("p-2 rounded bg-muted", {
-                    "text-red-400": status == "down",
-                    "text-blue-400": status == "up",
-                  })}
-                >
-                  {key} is {status == "down" && "not"} fine.
-                </li>
-              );
-            })}
-          </ul>
+          <HealthCards details={data.details} />
         </div>
       </section>
     </main>
+  );
+}
+
+function HealthCards({ details }: { details: HealthResponse["details"] }) {
+  const icons = {
+    database: Database02Icon,
+    storage: Storage,
+    memory: RamMemoryIcon,
+  } as const;
+
+  return (
+    <ul className="flex flex-wrap gap-1 mt-2">
+      {Object.keys(details).map((key) => {
+        const status = details[key as keyof typeof details].status;
+
+        return (
+          <li
+            key={key}
+            className={cn("", {
+              "text-red-400": status == "down",
+              "text-blue-400": status == "up",
+            })}
+          >
+            <div className="border rounded-t flex items-center justify-center min-h-50 min-w-sm border-b-transparent">
+              <HugeiconsIcon
+                icon={icons[key as keyof typeof icons]}
+                size={100}
+              />
+            </div>
+            <div className="p-6 bg-muted rounded-b">
+              <h4 className="text-lg capitalize">{key}</h4>
+              The {key} service is {status == "down" && "not"} fine.
+            </div>
+          </li>
+        );
+      })}
+    </ul>
   );
 }

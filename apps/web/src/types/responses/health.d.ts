@@ -6,7 +6,7 @@ interface HealthResponse {
     database: {
       status: Status;
     };
-    memory_heap: {
+    memory: {
       status: Status;
     };
     storage: {
@@ -17,7 +17,7 @@ interface HealthResponse {
     database?: {
       status: "down";
     };
-    memory_heap?: {
+    memory?: {
       status: "down";
     };
     storage?: {
