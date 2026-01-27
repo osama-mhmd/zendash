@@ -7,6 +7,7 @@ import { primaryKey } from "drizzle-orm/pg-core";
 export const projects = pgTable("projects", {
   id: uuid().defaultRandom().primaryKey(),
   name: text().notNull(),
+  fingerprint: text().default("description").notNull(), // Will be moved to projectSettings in future
   createdAt: timestamp().defaultNow().notNull(),
 });
 

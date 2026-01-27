@@ -18,9 +18,12 @@ const _api = async (url: string, options: Options = {}) => {
     method: options.method ?? "POST",
     credentials: "include",
     headers: {
-      "Content-Type": "application/json",
+      ...(options.body && { "Content-Type": "application/json" }),
     },
-    body: options.body ? JSON.stringify(options.body) : undefined,
+    ...(options.method !== "GET" &&
+      options.body && {
+        body: JSON.stringify(options.body),
+      }),
   });
 
   const json = await res.json();

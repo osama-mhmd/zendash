@@ -1,6 +1,7 @@
 import EventToCreate from "@dto/event/event-to-create.dto";
 import { Injectable } from "@nestjs/common";
 import { Events, Projects } from "@repos";
+import Issues from "@repos/issues.repository";
 
 interface EventToGet {
   userId: string;
@@ -15,7 +16,19 @@ interface AllEventsToGet {
 @Injectable()
 export class EventsService {
   async create(ev: EventToCreate & { projectId: string }) {
+    const project = await Projects.get(ev.projectId);
+
+    if (!project) return { ok: false };
+
     await Events.create(ev);
+
+    const fingerprintValue = ev[project.fingerprint];
+
+    const issue = await Issues.getByFingerprint(fingerprintValue);
+
+    if (!issue) {
+      await Issues.create(ev.projectId, fingerprintValue);
+    }
 
     return {
       ok: true,
