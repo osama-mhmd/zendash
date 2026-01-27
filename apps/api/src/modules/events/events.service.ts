@@ -73,6 +73,12 @@ export class EventsService {
     };
   }
 
+  async getByIssue({ issueId }: { issueId: string }) {
+    const events = await Events.groupByIssue(issueId);
+
+    return { ok: true, data: events };
+  }
+
   async me(userId: string) {
     const res = await Events.getForUser(userId);
 

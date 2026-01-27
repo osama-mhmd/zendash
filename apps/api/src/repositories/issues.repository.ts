@@ -40,6 +40,12 @@ const Issues = {
     return issue;
   },
 
+  async get(id: string): Promise<Issue | undefined> {
+    const [issue] = await db.select().from(issues).where(eq(issues.id, id));
+
+    return issue;
+  },
+
   async getForUser(userId: string) {
     const _issues = await db
       .select({

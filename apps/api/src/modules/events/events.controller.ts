@@ -62,8 +62,18 @@ export class EventsController {
   async getAll(
     @Res() res: Response,
     @Req() req: Request,
-    @Body() { projectId }: EventToGet,
+    @Query("projectId") projectId: string,
+    @Query("issueId") issueId: string,
   ) {
+    if (issueId) {
+      const result = await this.eventsService.getByIssue({
+        issueId,
+      });
+
+      res.status(result.ok ? 200 : 400).json(result);
+      return;
+    }
+
     if (!projectId) res.status(400).json({ ok: false });
 
     const result = await this.eventsService.getAll({

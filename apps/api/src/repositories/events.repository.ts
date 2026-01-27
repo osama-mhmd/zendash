@@ -7,6 +7,9 @@ import { projectsPrivileges } from "@db/schemas/projects";
 import EventToCreate from "@dto/event/event-to-create.dto";
 import { eq, getTableColumns } from "drizzle-orm";
 import grc from "src/utils/grs";
+import Projects from "./projects.repository";
+import Issues from "./issues.repository";
+import { issues } from "@db/schemas/issues";
 
 const Events = {
   async create({ projectId, ...event }: EventToCreate & { projectId: string }) {
@@ -47,6 +50,22 @@ const Events = {
       .select()
       .from(events)
       .where(eq(events.projectId, projectId));
+
+    return _events;
+  },
+  async groupByIssue(issueId: string) {
+    const issue = await Issues.get(issueId);
+
+    if (!issue) return;
+
+    const project = await Projects.get(issue.projectId);
+
+    if (!project) return;
+
+    const _events = await db
+      .select()
+      .from(events)
+      .where(eq(events[project.fingerprint], issue.fingerprintValue));
 
     return _events;
   },
