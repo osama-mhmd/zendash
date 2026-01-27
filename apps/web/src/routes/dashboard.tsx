@@ -11,10 +11,13 @@ import {
   PlusSignCircleIcon,
   Loading03Icon,
   User02Icon,
+  Clock01Icon,
+  WaterfallUp02Icon,
+  Person,
 } from "@hugeicons/core-free-icons";
 import { Panel, PanelAction, PanelBody } from "@/components/ui/panel";
 import Command from "@/components/ui/command";
-// import { timeAgo } from "@/utils";
+import { timeAgo } from "@/utils";
 import { Alert02Icon, AlertDiamondIcon } from "@hugeicons/core-free-icons";
 import React from "react";
 
@@ -234,33 +237,46 @@ function RouteComponent() {
                     </div>
                   </div>
                 )}
-              <div className="grid grid-cols-3 gap-2 w-full">
+              <div className="grid grid-cols-1 gap-2 w-full">
                 {!isPending &&
                   data.events.map((ev: Event) => (
                     <div
-                      className="p-2 cursor-pointer transition px-4 rounded-2xl border bg-muted/25 hover:bg-muted/35 space-y-2"
+                      className="p-2 cursor-pointer grid grid-cols-[1fr_auto] transition px-4 rounded-2xl border bg-muted/5 hover:bg-muted/15"
                       key={ev.id}
                       onClick={() => setEvent(ev)}
                     >
-                      <h3 className="text-xl flex gap-2 my-2 font-bold">
-                        {ev.level == "error" ? (
-                          <HugeiconsIcon icon={Alert02Icon} />
-                        ) : (
-                          <HugeiconsIcon icon={AlertDiamondIcon} />
-                        )}{" "}
-                        {ev.description}
-                      </h3>
                       <div>
-                        <span className="p-1 px-3 inline-block bg-muted rounded-2xl">
-                          {ev.file}
-                        </span>
+                        <h3 className="text-xl flex text-red-300 gap-2 my-2 font-bold uppercase">
+                          {ev.level == "error" ? (
+                            <HugeiconsIcon icon={Alert02Icon} />
+                          ) : (
+                            <HugeiconsIcon icon={AlertDiamondIcon} />
+                          )}{" "}
+                          {ev.description}
+                        </h3>
+                        <div className="text-sm space-x-1">
+                          {ev.handled ? (
+                            <span className="text-blue-400">Handled</span>
+                          ) : (
+                            <span className="text-red-400">Unhandled</span>
+                          )}
+                          <span className="text-gray-700">|</span>
+                          <span className="p-1 text-sm px-3 inline-block bg-muted rounded-2xl">
+                            {ev.file}
+                          </span>
+                        </div>
                       </div>
-                      <div className="text-sm">
-                        {ev.handled ? (
-                          <span className="text-blue-400">Handled</span>
-                        ) : (
-                          <span className="text-red-400">Unhandled</span>
-                        )}
+                      <div className="text-center items-center gap-4 flex *:gap-1 *:flex">
+                        <span className="underline text-muted-foreground">
+                          {timeAgo.format(ev.occurredAt)} ago
+                          <HugeiconsIcon icon={Clock01Icon} />
+                        </span>
+                        <span className="text-muted-foreground">
+                          - <HugeiconsIcon icon={WaterfallUp02Icon} />
+                        </span>
+                        <span className="text-muted-foreground">
+                          - <HugeiconsIcon icon={Person} />
+                        </span>
                       </div>
                     </div>
                   ))}
