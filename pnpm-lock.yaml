@@ -137,6 +137,12 @@ importers:
       '@fontsource/inter':
         specifier: ^5.2.8
         version: 5.2.8
+      '@fontsource/quicksand':
+        specifier: ^5.2.10
+        version: 5.2.10
+      '@fontsource/sniglet':
+        specifier: ^5.2.8
+        version: 5.2.8
       '@hugeicons/core-free-icons':
         specifier: ^3.1.1
         version: 3.1.1
@@ -1072,6 +1078,12 @@ packages:
 
   '@fontsource/inter@5.2.8':
     resolution: {integrity: sha512-P6r5WnJoKiNVV+zvW2xM13gNdFhAEpQ9dQJHt3naLvfg+LkF2ldgSLiF4T41lf1SQCM9QmkqPTn4TH568IRagg==}
+
+  '@fontsource/quicksand@5.2.10':
+    resolution: {integrity: sha512-rck0ccT6vJF9RnbSW2ON1grq5qFZvjVOGvYIUixATXF8mNh4KglD+8Sn8QpRgKQBSBJF5yOR3SBYBWPg/Y8YbQ==}
+
+  '@fontsource/sniglet@5.2.8':
+    resolution: {integrity: sha512-K2ESFqkw2AxBCu5Ar//ixp5el8lEcdmk8uDWj0jT1uiC82RFjQXq+PFvAA64Nd2TpHygafH7lY9K9493dzPXqw==}
 
   '@hugeicons/core-free-icons@3.1.1':
     resolution: {integrity: sha512-UpS2lUQFi5sKyJSWwM6rO+BnPLvVz1gsyCpPHeZyVuZqi89YH8ksliza4cwaODqKOZyeXmG8juo1ty4QtQofkg==}
@@ -6606,6 +6618,10 @@ snapshots:
   '@fontsource/changa-one@5.2.8': {}
 
   '@fontsource/inter@5.2.8': {}
+
+  '@fontsource/quicksand@5.2.10': {}
+
+  '@fontsource/sniglet@5.2.8': {}
 
   '@hugeicons/core-free-icons@3.1.1': {}
 

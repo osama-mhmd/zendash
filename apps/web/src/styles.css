@@ -1,6 +1,8 @@
 @import "tailwindcss";
-@import "@fontsource/inter";
-@import "@fontsource/changa-one";
+@import "@fontsource/sniglet";
+/* @import "@fontsource/inter"; */
+/* @import "@fontsource/changa-one"; */
+@import "@fontsource/quicksand";
 
 @theme {
   --color-foreground: var(--color-white);
@@ -9,7 +11,7 @@
   --color-muted-foreground: var(--color-gray-400);
   --color-border: var(--color-gray-800);
   --color-outline-focus: var(--color-gray-700);
-  --font-game: "Changa One";
+  --font-game: "Sniglet";
 }
 
 @layer base {
@@ -33,7 +35,7 @@
 
 body {
   @apply m-0 text-foreground bg-background;
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: "Quicksand", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

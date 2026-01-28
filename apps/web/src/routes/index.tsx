@@ -1,8 +1,11 @@
-import Button from "@/components/ui/button";
 import api from "@/libs/api";
 
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Login01Icon } from "@hugeicons/core-free-icons";
+import {
+  DashboardCircleIcon,
+  Login01Icon,
+  Switch,
+} from "@hugeicons/core-free-icons";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
@@ -20,19 +23,29 @@ function App() {
           ZD
         </Link>
         <div className="flex">
-          <Link to="/login" className="bg-gray-800/35 rounded-2xl text-xl p-4">
-            <HugeiconsIcon icon={Login01Icon} />
+          <Link
+            to={authenticated ? "/dashboard" : "/login"}
+            className="bg-gray-800/35 rounded-2xl text-xl p-4"
+          >
+            <HugeiconsIcon
+              icon={authenticated ? DashboardCircleIcon : Login01Icon}
+            />
           </Link>
         </div>
       </nav>
       <main>
         <section>
-          <div className="cnt text-center flex flex-col items-center gap-y-2 mt-36">
-            <h1 className="text-6xl font-game">Zendash</h1>
-            <p className="text-mutued-foreground">
-              Debug like in a Game with Zen mode
-            </p>
-            {authenticated ? (
+          <div className="cnt text-center flex flex-col items-center gap-y-2 my-25">
+            <h1 className="text-6xl font-black text-blue-50 text-shadow-md text-shadow-blue-900 mb-3 max-w-3xl">
+              Debug like in a{" "}
+              <span className="font-game tracking-normal font-normal text-7xl">
+                Game
+              </span>{" "}
+              with Zen mode enabled{" "}
+              <HugeiconsIcon icon={Switch} size={80} className="inline" />
+            </h1>
+            {/* <p className="text-muted-foreground mb-2"></p> */}
+            {/* {authenticated ? (
               <Button asChild>
                 <Link to="/dashboard">Continue debugging</Link>
               </Button>
@@ -40,7 +53,20 @@ function App() {
               <Button asChild>
                 <Link to="/register">Create an account</Link>
               </Button>
-            )}
+            )} */}
+            <div className="border scale-75 -my-20 rounded-3xl">
+              <div className="h-10 bg-muted/25 rounded-t-3xl flex items-center gap-1 ps-5 px-3 justify-between">
+                <div className="text-sm text-muted-foreground">
+                  Image: Issue page
+                </div>
+                <div className="flex gap-1">
+                  <div className="size-4 rounded-full bg-red-400"></div>
+                  <div className="size-4 rounded-full bg-yellow-400"></div>
+                  <div className="size-4 rounded-full bg-green-400"></div>
+                </div>
+              </div>
+              <img className="rounded-b-3xl" src="/showcases/issue-page.png" />
+            </div>
           </div>
         </section>
       </main>
