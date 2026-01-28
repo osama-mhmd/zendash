@@ -17,6 +17,7 @@ import {
 import { cn, timeAgo } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 const validateSearch = z.object({
   id: z.string(),
@@ -137,26 +138,88 @@ function RouteComponent() {
             </div>
           </div>
           <div className="flex flex-col border rounded-2xl p-4 space-y-4">
-            <div>
-              <h3 className="text-xl text-muted-foreground">
+            <div className="flex justify-between">
+              <h3 className="text-xl py-1 px-2 rounded-3xl text-muted-foreground">
                 {ev.description}
               </h3>
-              ID: #{ev.id}
-            </div>
-            <div>
-              <h3 className="text-xl text-muted-foreground">Information</h3>
-              <div>
-                <div>{ev.stack}</div>
-                <div>{ev.file}</div>
+              <div
+                onClick={() => {
+                  navigator.clipboard.writeText(ev.id);
+                  toast("Copied!");
+                }}
+                className="cursor-pointer bg-yellow-800/25 text-yellow-300 rounded-3xl px-4 py-2"
+              >
+                #{ev.id}
               </div>
             </div>
+            <div className="p-4 bg-muted rounded-xl flex gap-4">
+              <h3 className="text-lg text-muted-foreground">File</h3>
+              <div className="mt-1">{ev.file}</div>
+            </div>
+            <div className="p-4 bg-muted rounded-xl flex gap-4">
+              <h3 className="text-lg text-muted-foreground">Stack trace</h3>
+              <div className="mt-1">{ev.stack}</div>
+            </div>
             <div>
-              <h4 className="text-lg text-muted-foreground">Metadata</h4>
-              <div>
-                <div>Browser: {ev.browser}</div>
-                <div>Platform: {ev.platform}</div>
-                <div>Source: {ev.source}</div>
+              <h4 className="text-lg text-muted-foreground mb-4">Metadata</h4>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="border p-4 rounded-xl">
+                  <h4 className="font-semibold -translate-1">Browser</h4>
+                  <div className="p-2 bg-muted mt-2">
+                    <span className="text-muted-foreground w-60 inline-block">
+                      Name
+                    </span>
+                    <span>{ev.browser?.split("@")[0]}</span>
+                  </div>
+                  <div className="p-2">
+                    <span className="text-muted-foreground w-60 inline-block">
+                      Version
+                    </span>
+                    <span>{ev.browser?.split("@")[1]}</span>
+                  </div>
+                </div>
+                <div className="border p-4 rounded-xl">
+                  <h4 className="font-semibold -translate-1">Platform</h4>
+                  <div className="p-2 bg-muted mt-2">
+                    <span className="text-muted-foreground w-60 inline-block">
+                      Name
+                    </span>
+                    <span>{ev.platform}</span>
+                  </div>
+                </div>
+                <div className="border p-4 rounded-xl">
+                  <div className="p-2 bg-muted mt-2">
+                    <span className="text-muted-foreground w-60 inline-block">
+                      Source
+                    </span>
+                    <span>{ev.source}</span>
+                  </div>
+                </div>
               </div>
+            </div>
+            <hr />
+            <div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-muted/50 p-4 rounded-2xl flex gap-12">
+                  <span className="text-muted-foreground">Received at</span>
+                  {ev.recievedAt.toString()}
+                </div>
+                <div className="bg-muted p-4 rounded-2xl flex gap-12">
+                  <span className="text-muted-foreground">Occurred at</span>
+                  {ev.occurredAt.toString()}
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div className="border p-4 rounded-2xl flex justify-between">
+              <div>
+                <span className="text-muted-foreground pe-3">Delay</span>
+                {+new Date(ev.recievedAt) - +new Date(ev.occurredAt)}ms
+              </div>
+              <HugeiconsIcon
+                className="text-red-400 cursor-pointer"
+                icon={Alert02Icon}
+              />
             </div>
           </div>
         </div>
