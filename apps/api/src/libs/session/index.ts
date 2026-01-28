@@ -10,7 +10,7 @@ type ValidationResult =
     }
   | {
       ok: true;
-      user: User;
+      user: Prettify<Omit<User, "hashedPassword" | "id">>;
       token: string;
       expiresAt?: Date;
     };
@@ -74,7 +74,18 @@ const Session = {
 
       const user = await Users.getById(session.userId);
 
-      return { ok: true, user, token, expiresAt };
+      return {
+        ok: true,
+        user: {
+          username: user.username,
+          createdAt: user.createdAt,
+          email: user.email,
+          fullname: user.fullname,
+          isVerified: user.isVerified,
+        },
+        token,
+        expiresAt,
+      };
     } catch (e) {
       return {
         ok: false,
