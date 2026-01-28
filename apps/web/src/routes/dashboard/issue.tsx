@@ -16,7 +16,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { cn, timeAgo } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 const validateSearch = z.object({
   id: z.string(),
@@ -71,6 +71,12 @@ function RouteComponent() {
     <main>
       <section className="py-16">
         <div className="cnt space-y-3">
+          <Link
+            to="/dashboard"
+            className="flex gap-1 items-center p-2 pr-4 bg-muted w-fit rounded-2xl text-sm"
+          >
+            <HugeiconsIcon icon={ChevronLeft} size={18} /> Back to dashboard
+          </Link>
           <div
             className="p-2 grid grid-cols-[1fr_auto] transition px-4 rounded-2xl border bg-muted/5"
             key={issue.id}

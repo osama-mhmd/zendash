@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/libs/api";
 import Input from "@/components/ui/input";
@@ -251,7 +251,9 @@ function RouteComponent() {
               <div className="grid grid-cols-1 gap-2 w-full">
                 {!isPending &&
                   data.issues.map((is: Issue) => (
-                    <div
+                    <Link
+                      to="/dashboard/issue"
+                      search={{ id: is.id }}
                       className="p-2 cursor-pointer grid grid-cols-[1fr_auto] transition px-4 rounded-2xl border bg-muted/5 hover:bg-muted/15"
                       key={is.id}
                     >
@@ -284,7 +286,7 @@ function RouteComponent() {
                           - <HugeiconsIcon icon={Person} />
                         </span>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 {event && (
                   <div onClick={() => setEvent(null)} className="overlay">
