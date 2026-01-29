@@ -10,7 +10,7 @@ type ValidationResult =
     }
   | {
       ok: true;
-      user: Prettify<Omit<User, "hashedPassword" | "id">>;
+      user: Prettify<Omit<User, "hashedPassword">>;
       token: string;
       expiresAt?: Date;
     };
@@ -77,6 +77,7 @@ const Session = {
       return {
         ok: true,
         user: {
+          id: user.id,
           username: user.username,
           createdAt: user.createdAt,
           email: user.email,

@@ -10,5 +10,5 @@ export const users = pgTable("users", {
   createdAt: timestamp().defaultNow(),
 });
 
-export type User = typeof users.$inferSelect;
+export type User = Prettify<Omit<typeof users.$inferSelect, "hashedPassword">>;
 export type NewUser = typeof users.$inferInsert;
